@@ -1,0 +1,33 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+}
+.container {
+  width: 1170px;
+  margin: auto;
+  padding: 15px;
+  background-color: gray;
+}
+.container .content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.container .content .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.container .content h2 {
+  flex: 2;
+}
+.container .content ul {
+  display: flex;
+  list-style-type: none;
+  flex: 1;
+}
