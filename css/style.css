@@ -1,5 +1,5 @@
 body {
-  background-color: #201c1a;
+  background-color: #1a1918;
 }
 
 /* STYLING BUBBLES*/
@@ -15,7 +15,7 @@ body {
   display: inline-block;
   border-radius: 50%;
   animation: animate 5s infinite ease-in-out;
-  animation-duration: calc(100s / var(--i));
+  animation-duration: calc(250s / var(--i));
 }
 
 .bubbles span:nth-of-type(odd) {
@@ -29,16 +29,16 @@ body {
 
 @keyframes animate {
   0% {
-    transform: translateY(100vh);
+    transform: translateY(100vh) translateX(50%);
   }
   100% {
-    transform: translateY(-100vh) scale(2);
+    transform: translateY(-100vh) scale(2) translateX(-50%);
   }
 }
 /*END STYLING BUBBLES*/
 
-nav {
-  filter: drop-shadow(2px 2px 3px tomato);
+header {
+  filter: drop-shadow(2px 2px 3px black);
 }
 .nav-link,
 .navbar-brand {
@@ -51,7 +51,23 @@ nav {
   color: white;
 }
 .active {
-  border-bottom: 1px solid black;
   transform: scale(1.1);
-  box-shadow: 2px 2px 2px black;
+  box-shadow: 2px 2px 2px tomato;
+}
+
+.card {
+  box-shadow: 0 0 0 10px rgb(28 28 28), 0 0 0 20px rgb(26 26 26);
+  transition: all 0.5s;
+  transform: scale(1);
+}
+.card:hover {
+  box-shadow: 0 0 0 10px rgba(26, 26, 26, 0.253),
+    0 0 0 20px rgba(21, 21, 21, 0.379);
+  transform: scale(1.01);
+}
+
+@media screen and (max-width: 460px) {
+  .buttons {
+    margin: 15px auto !important;
+  }
 }

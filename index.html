@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <title>social media project</title>
   </head>
-  <body>
+  <body class="text-white">
     <!-- CREATING BUBBLES -->
     <div class="bubbles">
       <span style="--i: 1"></span>
@@ -53,13 +53,19 @@
     </div>
     <!-- END BUBBLES -->
 
+    <!-- STARTING HEADER -->
     <header class="my-header">
       <div class="container">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+        <nav class="navbar navbar-expand-lg bg-dark">
           <div class="container-fluid">
-            <a class="navbar-brand p-2" href="#">Space</a>
+            <a
+              class="navbar-brand p-2 text-light fw-bold text-uppercase"
+              href="#"
+              style="letter-spacing: 3px"
+              >Space</a
+            >
             <button
-              class="navbar-toggler"
+              class="navbar-toggler bg-body-tertiary"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#navbarNavAltMarkup"
@@ -69,19 +75,38 @@
             >
               <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse ms-3" id="navbarNavAltMarkup">
+            <div
+              class="collapse navbar-collapse ms-5"
+              id="navbarNavAltMarkup text-light"
+            >
               <div class="navbar-nav">
-                <a class="nav-link mx-2 active" aria-current="page" href="#"
+                <a
+                  class="nav-link text-light mx-2 active"
+                  aria-current="page"
+                  href="#"
                   >Home</a
                 >
-                <a class="nav-link mx-2" href="#">Features</a>
-                <a class="nav-link mx-2" href="#">Pricing</a>
+                <a class="nav-link text-light mx-2" href="#">Profile</a>
               </div>
+            </div>
+            <div
+              class="buttons mt-sm-3 text-sm-center mt-sm-3 me-sm-0 mx-sm-auto mx-4"
+            >
+              <button class="btn btn-outline-success">Log In</button>
+              <button class="btn btn-outline-danger">Sign up</button>
             </div>
           </div>
         </nav>
       </div>
     </header>
+
+    <!-- ENDING HEADER -->
+
+    <!-- POSTS SECTION -->
+    <div class="posts mt-3">
+      <div class="container"></div>
+    </div>
+    <!-- ENDING POSTS -->
 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
