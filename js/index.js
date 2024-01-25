@@ -14,19 +14,53 @@ document.querySelector(".navbar-toggler").addEventListener("click", () => {
   document.querySelector(".navbar-collapse").classList.toggle("collapse");
 });
 
-// CREATING POSTS WITH API
+// CHANGING NABAR-TOGGLER WHEN SCREEN WIDTH < 992PX USING document.body.scrollWidth...
+let navbarToggler = document.querySelector(".navbar-toggler");
+
+navbarToggler.addEventListener("click", () => {
+  navbarToggler.children[0].classList.toggle("disappear");
+  navbarToggler.children[1].classList.toggle("appear");
+});
+
+// CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
 let PostsContainer = document.querySelector(".posts .container");
 let AllPosts = [];
 
-async function FetchingPosts() {
-  let res = await fetch("https://tarmeezacademy.com/api/v1/posts").then((res) =>
-    res.json()
-  );
-  AllPosts = res.data;
-  CreatingPosts();
+// FETCHING POSTS...
+//async
+function FetchingPosts() {
+  //todo: FETCHING POSTS WITH ==> fetch() FUNCTION ... ASYNC & AWAIT
+  // let res = await fetch("https://tarmeezacademy.com/api/v1/posts").then((res) =>
+  //   res.json()
+  // );
+  // AllPosts = res.data;
+  // CreatingPosts();
+
+  //todo: FETCHING POSTS ==> WITH new Promise() , new XMLHttpRequest()(open() ;send()) FUNCTIONS ...
+  let FetchingPots = new Promise((resolve, reject) => {
+    let Request = new XMLHttpRequest();
+
+    Request.open("get", "https://tarmeezacademy.com/api/v1/posts");
+    Request.responseType = "json";
+
+    Request.onload = () => {
+      if (Request.status >= 200 && Request.status < 300) {
+        resolve(Request.response);
+      } else {
+        reject("There Some error In Your Request");
+      }
+    };
+    Request.send();
+  });
+  FetchingPots.then((res) => {
+    AllPosts = res.data;
+    CreatingPosts();
+  });
+  FetchingPots.catch((err) => console.log(err));
 }
 FetchingPosts();
 
+// PUSHING POSTS TO HTML FILE
 function CreatingPosts() {
   AllPosts.forEach((post) => {
     PostsContainer.innerHTML += `

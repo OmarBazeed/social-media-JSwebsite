@@ -45,14 +45,13 @@ header {
   background-color: transparent;
   transition: all 0.5s;
 }
-.nav-link:hover,
-.navbar-brand:hover {
-  background-color: tomato;
+.nav-link:hover {
+  background-color: rgb(133 59 36 / 17%);
   color: white;
 }
 .active {
   transform: scale(1.1);
-  box-shadow: 2px 2px 2px tomato;
+  box-shadow: -4px 3px 4px 0px tomato;
 }
 
 .card {
@@ -69,5 +68,46 @@ header {
 @media screen and (max-width: 460px) {
   .buttons {
     margin: 15px auto !important;
+  }
+}
+
+.navbar-toggler {
+  background: linear-gradient(to right, #ff5722, black);
+  color: white;
+  font-weight: bold;
+  filter: drop-shadow(2px 4px 6px black);
+  overflow: hidden;
+}
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.appear {
+  display: block !important;
+}
+.disappear {
+  display: none !important;
+}
+
+.navbar-toggler .bi:first-of-type {
+  animation: moving 1.5s infinite ease-in-out alternate;
+}
+@keyframes moving {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(50%) scale(1.3);
+  }
+}
+.navbar-toggler .bi:last-of-type {
+  animation: movingg 1.5s infinite ease-in-out alternate;
+}
+@keyframes movingg {
+  0% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(-50%) scale(1.3);
   }
 }
