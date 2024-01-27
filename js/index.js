@@ -1,3 +1,5 @@
+let BaseURL = "https://tarmeezacademy.com/api/v1";
+
 // HANDLIG ACTIVE PAGE
 let ActiveLinkes = document.querySelectorAll(".nav-link");
 ActiveLinkes.forEach((ele) => {
@@ -40,7 +42,7 @@ function FetchingPosts() {
   let FetchingPots = new Promise((resolve, reject) => {
     let Request = new XMLHttpRequest();
 
-    Request.open("get", "https://tarmeezacademy.com/api/v1/posts");
+    Request.open("get", `${BaseURL}/posts`);
     Request.responseType = "json";
 
     Request.onload = () => {
@@ -114,3 +116,38 @@ function CreatingPosts() {
         `;
   });
 }
+
+// LOGIN FUNCTION
+
+let LoginBtn = document.getElementById("login-btn");
+let userName = document.getElementById("username");
+let Password = document.getElementById("password");
+
+function loginBtnClicked() {
+  LoginBtn.addEventListener("click", () => {
+    axios
+      .post(`${BaseURL}/login`, {
+        username: userName.value,
+        password: Password.value,
+      })
+      .then((res) => {
+        if (res.data.token) {
+          localStorage.setItem("user-token", res.data.token);
+          document.getElementById("loginModal").style.display = "none";
+          document.querySelector(".modal-backdrop").style.display = "none";
+
+          document.querySelector(
+            ".buttons"
+          ).innerHTML = `<button type="button" class="btn btn-outline-danger" id="logOutBtn">
+          Log out
+          </button>`;
+        }
+      })
+      .catch((err) => {
+        document.getElementById("error_message").classList.remove("d-none");
+        document.getElementById("error_message").innerHTML =
+          "): " + err.message + " !";
+      });
+  });
+}
+loginBtnClicked();

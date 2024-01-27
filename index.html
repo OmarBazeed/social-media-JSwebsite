@@ -8,6 +8,59 @@
     <title>social media project</title>
   </head>
   <body class="text-white">
+    <!-- LOG IN MODAL -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      s
+      <div class="modal-dialog">
+        <div class="modal-content bg-black border-1 border-secondary">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">LOG IN</h1>
+            <p
+              class="error_message d-none mb-0 ms-3 fw-bold text-decoration-capitalize"
+              id="error_message"
+            ></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="username" class="col-form-label">username : </label>
+                <input type="text" class="form-control" id="username" />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="col-form-label">password :</label>
+                <input type="password" class="form-control" id="password" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="login-btn">
+              Log in
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ENDING LOG IN MODAL -->
+
     <!-- CREATING BUBBLES -->
     <div class="bubbles">
       <span style="--i: 1"></span>
@@ -62,7 +115,7 @@
               class="navbar-brand p-2 text-light fw-bold text-uppercase"
               href="#"
               style="letter-spacing: 3px"
-              >Space</a
+              >Spac<span>e</span></a
             >
             <button
               class="navbar-toggler btn-outline-none ms-5"
@@ -119,8 +172,14 @@
             <div
               class="buttons mt-sm-3 text-sm-center mt-sm-3 me-sm-0 mx-sm-auto mx-4"
             >
-              <button class="btn btn-outline-success">Log In</button>
-              <button class="btn btn-outline-danger">Sign up</button>
+              <button
+                class="btn btn-outline-success"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+              >
+                Log In
+              </button>
+              <button class="btn btn-outline-secondary">Register</button>
             </div>
           </div>
         </nav>
@@ -136,6 +195,7 @@
     <!-- ENDING POSTS -->
 
     <script src="js/bootstrap.min.js"></script>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
     <script src="js/index.js"></script>
   </body>
 </html>
