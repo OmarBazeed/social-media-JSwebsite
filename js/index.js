@@ -118,10 +118,36 @@ function CreatingPosts() {
 }
 
 // LOGIN FUNCTION
-
 let LoginBtn = document.getElementById("login-btn");
 let userName = document.getElementById("username");
 let Password = document.getElementById("password");
+let LoginModal = document.getElementById("loginModal");
+let LoginBtns = document.querySelector(".buttons");
+let ErrorMessage = document.getElementById("error_message");
+let ToastDiv = document.getElementById("liveToast");
+let LogOutBtn = document.getElementById("logOutBtn");
+
+//Check If There Is Token Before(Is The Client Signed In Before) ?
+function CheckingIfTokenIsFounded() {
+  if (localStorage.getItem("user-token") != null) {
+    console.log("first");
+    LogOutBtn.style.display = "block !important";
+    LoginBtns.style.display = "none";
+  } else {
+    LogOutBtn.style.display = "none";
+    LoginBtns.style.display = "block";
+  }
+}
+CheckingIfTokenIsFounded();
+
+//CLICKING ON SIGNOUT BYTTON
+function ClickingOnSignOut() {
+  LogOutBtn.addEventListener("click", () => {
+    localStorage.removeItem("user-token");
+    window.location.reload();
+  });
+}
+ClickingOnSignOut();
 
 function loginBtnClicked() {
   LoginBtn.addEventListener("click", () => {
@@ -132,21 +158,25 @@ function loginBtnClicked() {
       })
       .then((res) => {
         if (res.data.token) {
+          //KEEPING TOKEN , USER IN LOCAL STORAGE
           localStorage.setItem("user-token", res.data.token);
-          document.getElementById("loginModal").style.display = "none";
-          document.querySelector(".modal-backdrop").style.display = "none";
+          localStorage.setItem("user", JSON.stringify(res.data.user));
 
-          document.querySelector(
-            ".buttons"
-          ).innerHTML = `<button type="button" class="btn btn-outline-danger" id="logOutBtn">
-          Log out
-          </button>`;
+          // CONTROLLING SOME ELEMENTS IN HTML
+          LoginModal.style.display = "none";
+          document.querySelector(".modal-backdrop").style.display = "none";
+          LogOutBtn.style.display = "block";
+          LoginBtns.style.display = "none";
+
+          ToastDiv.classList.toggle("show");
+          setTimeout(() => {
+            ToastDiv.classList.remove("show");
+          }, 2000);
         }
       })
       .catch((err) => {
-        document.getElementById("error_message").classList.remove("d-none");
-        document.getElementById("error_message").innerHTML =
-          "): " + err.message + " !";
+        ErrorMessage.classList.remove("d-none");
+        ErrorMessage.innerHTML = "): " + err.message + " !";
       });
   });
 }
