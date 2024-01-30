@@ -126,13 +126,28 @@ let LoginBtns = document.querySelector(".buttons");
 let ErrorMessage = document.getElementById("error_message");
 let ToastDiv = document.getElementById("liveToast");
 let LogOutBtn = document.getElementById("logOutBtn");
+let loggedInUser = document.querySelector(".loggedInUser");
 
+// REGISTER BUTTON ...
+let RegisterBtn = document.querySelector(".RegisterBtn");
+let RegisterModal = document.getElementById("registerModel");
+let CloseRegisterBtn = document.querySelector(".closeRegister");
 //Check If There Is Token Before(Is The Client Signed In Before) ?
 function CheckingIfTokenIsFounded() {
   if (localStorage.getItem("user-token") != null) {
-    console.log("first");
     LogOutBtn.style.display = "block !important";
     LoginBtns.style.display = "none";
+    loggedInUser.classList.remove("d-none");
+    loggedInUser.innerHTML = `
+    <img src=${
+      typeof JSON.parse(localStorage.getItem("user")).profile_image != "object"
+        ? JSON.parse(localStorage.getItem("user")).profile_image
+        : "../imgs/man_4140037.png"
+    }
+    style="width:25px; height:25px"
+    />
+    <span> ${JSON.parse(localStorage.getItem("user")).name}</span>
+    `;
   } else {
     LogOutBtn.style.display = "none";
     LoginBtns.style.display = "block";
@@ -165,10 +180,22 @@ function loginBtnClicked() {
           // CONTROLLING SOME ELEMENTS IN HTML
           LoginModal.style.display = "none";
           document.querySelector(".modal-backdrop").style.display = "none";
-          LogOutBtn.style.display = "block";
+          LogOutBtn.style.display = "inline-block";
           LoginBtns.style.display = "none";
-
           ToastDiv.classList.toggle("show");
+
+          // FILLING PERSONAL DATA TO THE LOGGED IN USER
+          loggedInUser.classList.remove("d-none");
+          loggedInUser.innerHTML = `
+          <img src=${
+            typeof res.data.user.profile_image != "object"
+              ? res.data.user?.profile_image
+              : "../imgs/man_4140037.png"
+          }
+          style="width:25px; height:25px"
+          />
+          <span> ${res.data.user?.name}</span>
+          `;
           setTimeout(() => {
             ToastDiv.classList.remove("show");
           }, 2000);
@@ -176,8 +203,39 @@ function loginBtnClicked() {
       })
       .catch((err) => {
         ErrorMessage.classList.remove("d-none");
-        ErrorMessage.innerHTML = "): " + err.message + " !";
+        ErrorMessage.innerHTML += err.message + " !";
       });
   });
 }
 loginBtnClicked();
+
+// CLICKING ON REGISTER BUTTON TO SUBMIT ...
+const newUserUName = document.getElementById("Newusername");
+const newUserPassword = document.getElementById("Newpassword");
+const newUserName = document.getElementById("NewUsername");
+const newUserEmail = document.getElementById("NewUseremail");
+const newUserImage = document.getElementById("NewUserimage");
+const RegisterBtnForSubmit = document.getElementById("register-btn");
+
+//HANDLING CLICKING ON REGISTER MODAL
+RegisterBtn.addEventListener("click", () => {
+  RegisterModal.classList.add("show");
+  RegisterModal.classList.add("d-block");
+});
+CloseRegisterBtn.addEventListener("click", () => {
+  RegisterModal.classList.remove("show");
+  RegisterModal.classList.remove("d-block");
+});
+
+// CLICKING ON REGISTER BUTTON TO SUBMIT
+RegisterBtnForSubmit.addEventListener("click", () => {
+  console.log(newUserImage.value);
+  axios
+    .post(`${BaseURL}/register`, {
+      username: newUserUName.value,
+      password: newUserPassword.value,
+      name: newUserName.name,
+      email: newUserEmail.value,
+    })
+    .then((res) => console.log(res.data));
+});
