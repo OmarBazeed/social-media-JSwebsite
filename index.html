@@ -81,8 +81,7 @@
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
-      s
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="registerDialog">
         <div class="modal-content bg-black border-1 border-secondary">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">REGISTER</h1>
@@ -103,6 +102,15 @@
             <form>
               <div class="mb-1">
                 <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >name</label
+                >
+                <input type="text" class="form-control" id="NewUsername" />
+              </div>
+              <div class="mb-1">
+                <label
                   for="Newusername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
                   style="letter-spacing: 2px"
@@ -118,33 +126,6 @@
                   >password</label
                 >
                 <input type="password" class="form-control" id="Newpassword" />
-              </div>
-              <div class="mb-1">
-                <label
-                  for="NewUsername"
-                  class="col-form-label text-capitalize fw-bold text-secondary"
-                  style="letter-spacing: 2px"
-                  >name</label
-                >
-                <input type="text" class="form-control" id="NewUsername" />
-              </div>
-              <div class="mb-1">
-                <label
-                  for="NewUseremail"
-                  class="col-form-label text-capitalize fw-bold text-secondary"
-                  style="letter-spacing: 2px"
-                  >email</label
-                >
-                <input type="text" class="form-control" id="NewUseremail" />
-              </div>
-              <div class="mb-1">
-                <label
-                  for="NewUserimage"
-                  class="col-form-label text-capitalize fw-bold text-secondary"
-                  style="letter-spacing: 2px"
-                  >image</label
-                >
-                <input type="file" class="form-control" id="NewUserimage" />
               </div>
             </form>
           </div>
@@ -181,7 +162,7 @@
             style="width: 25px; height: 25px"
             alt="..."
           />
-          <strong class="me-auto text-light">Log-in Status</strong>
+          <strong class="me-auto text-light ToastStrong">Log-in Status</strong>
           <button
             type="button"
             class="btn-close bg-light"
@@ -240,7 +221,7 @@
     <!-- END BUBBLES -->
 
     <!-- STARTING HEADER -->
-    <header class="my-header">
+    <header class="my-header sticky-top">
       <div class="container">
         <nav class="navbar navbar-expand-lg bg-dark overflow-hidden">
           <div class="container-fluid">

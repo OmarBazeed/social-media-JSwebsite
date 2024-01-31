@@ -88,7 +88,7 @@ function CreatingPosts() {
                 ? post.image
                 : "../imgs/2032772-Eric-Thomas-Quote-Champions-keep-going-when-they-don-t-have.jpg"
             }
-            class="w-100 vh-50% img-responsive img-thumbnail"
+            class="w-100 img-responsive img-thumbnail"
             alt="img"
           />
           <p class="text-secondary"> ${post.created_at} </p>
@@ -96,14 +96,16 @@ function CreatingPosts() {
             With supporting text below as a natural lead-in to additional
             content.
           </p>
-          <p class="text-decoration-underline">
+          <div class="d-flex align-items-center justify-content-start">
+          <p class="text-decoration-underline mb-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-pen"
+              class="bi bi-pen fw-bold fs-3"
               viewBox="0 0 16 16"
+              style="margin-top: -4px"
             >
               <path
                 d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
@@ -111,6 +113,18 @@ function CreatingPosts() {
             </svg>
             (${post.comments_count}) comments
           </p>
+          <div class="tags ms-3">
+          ${
+            post.tags.length > 0
+              ? post.tagsforEach((el) => {
+                  `<span>${el.name}</span>`;
+                })
+              : ` <span class="btn btn-danger opacity-75 text-white rounded-5">
+              No Tags 😢
+              </span>`
+          }
+          </div>
+          </div>
         </div>
       </div>
         `;
@@ -133,32 +147,42 @@ let RegisterBtn = document.querySelector(".RegisterBtn");
 let RegisterModal = document.getElementById("registerModel");
 let CloseRegisterBtn = document.querySelector(".closeRegister");
 //Check If There Is Token Before(Is The Client Signed In Before) ?
-function CheckingIfTokenIsFounded() {
-  if (localStorage.getItem("user-token") != null) {
+function CheckingIfUserIsFounded() {
+  if (localStorage.getItem("user")) {
     LogOutBtn.style.display = "block !important";
     LoginBtns.style.display = "none";
     loggedInUser.classList.remove("d-none");
+
     loggedInUser.innerHTML = `
-    <img src=${
-      typeof JSON.parse(localStorage.getItem("user")).profile_image != "object"
-        ? JSON.parse(localStorage.getItem("user")).profile_image
-        : "../imgs/man_4140037.png"
-    }
-    style="width:25px; height:25px"
-    />
-    <span> ${JSON.parse(localStorage.getItem("user")).name}</span>
+    <div class="btn-group">
+      <button class="btn btn-secondary dropdown-toggle">
+        <img src=${
+          typeof JSON.parse(localStorage.getItem("user")).profile_image !=
+          "object"
+            ? JSON.parse(localStorage.getItem("user")).profile_image
+            : "../imgs/man_4140037.png"
+        }
+        style="width:25px; height:25px"
+        />
+        <span> ${JSON.parse(localStorage.getItem("user")).name}</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+        <li><button class="dropdown-item" type="button">Edit</button></li>
+        <li><button class="dropdown-item" type="button">Delete</button></li>
+      </ul>
+    </div>
     `;
   } else {
     LogOutBtn.style.display = "none";
     LoginBtns.style.display = "block";
   }
 }
-CheckingIfTokenIsFounded();
+CheckingIfUserIsFounded();
 
 //CLICKING ON SIGNOUT BYTTON
 function ClickingOnSignOut() {
   LogOutBtn.addEventListener("click", () => {
-    localStorage.removeItem("user-token");
+    localStorage.removeItem("user");
     window.location.reload();
   });
 }
@@ -210,12 +234,13 @@ function loginBtnClicked() {
 loginBtnClicked();
 
 // CLICKING ON REGISTER BUTTON TO SUBMIT ...
+const newUserName = document.getElementById("NewUsername");
 const newUserUName = document.getElementById("Newusername");
 const newUserPassword = document.getElementById("Newpassword");
-const newUserName = document.getElementById("NewUsername");
-const newUserEmail = document.getElementById("NewUseremail");
-const newUserImage = document.getElementById("NewUserimage");
 const RegisterBtnForSubmit = document.getElementById("register-btn");
+let registerModal = document.getElementById("registerModel");
+let ToastDivStrong = document.querySelector("#liveToast strong");
+let ToastDivBody = document.querySelector("#liveToast .toast-body");
 
 //HANDLING CLICKING ON REGISTER MODAL
 RegisterBtn.addEventListener("click", () => {
@@ -229,13 +254,39 @@ CloseRegisterBtn.addEventListener("click", () => {
 
 // CLICKING ON REGISTER BUTTON TO SUBMIT
 RegisterBtnForSubmit.addEventListener("click", () => {
-  console.log(newUserImage.value);
   axios
     .post(`${BaseURL}/register`, {
       username: newUserUName.value,
       password: newUserPassword.value,
-      name: newUserName.name,
-      email: newUserEmail.value,
+      name: newUserName.value,
     })
-    .then((res) => console.log(res.data));
+    .then((res) => {
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      //CONTROLLING SOME ITEMS IN HTML AFTER REGISTER BUTTON
+      registerModal.classList.remove("d-block");
+      document.getElementById("registerDialog").style.display = "none";
+      LogOutBtn.style.display = "inline-block";
+      LoginBtns.style.display = "none";
+
+      ToastDivStrong.innerHTML = "Registration Status: ";
+      ToastDivBody.innerHTML = "You Had Registered In Successfuly 😇";
+      ToastDiv.classList.toggle("show");
+
+      // FILLING PERSONAL DATA TO THE LOGGED IN USER
+      loggedInUser.classList.remove("d-none");
+      loggedInUser.innerHTML = `
+                <img src=${
+                  typeof res.data.user.profile_image != "object"
+                    ? res.data.user?.profile_image
+                    : "../imgs/man_4140037.png"
+                }
+                style="width:25px; height:25px"
+                />
+                <span> ${res.data.user?.name}</span>
+                `;
+      setTimeout(() => {
+        ToastDiv.classList.remove("show");
+      }, 2000);
+    });
 });
