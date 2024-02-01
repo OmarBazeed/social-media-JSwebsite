@@ -146,6 +146,39 @@ let loggedInUser = document.querySelector(".loggedInUser");
 let RegisterBtn = document.querySelector(".RegisterBtn");
 let RegisterModal = document.getElementById("registerModel");
 let CloseRegisterBtn = document.querySelector(".closeRegister");
+
+//FUNCTION FOR STYLING THE LOGGED USER ...
+function StylingTheLoggedUser(res) {
+  loggedInUser.innerHTML = `
+    <div class="btn-group">
+      <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"  style="background:linear-gradient(to right, #ff5722, black);color:white;font-weight:bold">
+        <img src=${
+          typeof JSON.parse(localStorage.getItem("user")).profile_image ||
+          res.data.user.profile_image != "object"
+            ? JSON.parse(localStorage.getItem("user")).profile_image
+            : "../imgs/man_4140037.png"
+        }
+        style="width:25px; height:25px"
+        />
+        <span> ${
+          JSON.parse(localStorage.getItem("user")).name || res.data.user?.name
+        }</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start DropMenu">
+        <li><button class="dropdown-item" type="button">Edit</button></li>
+        <li><button class="dropdown-item" type="button">Delete</button></li>
+      </ul>
+    </div>
+    `;
+  document.querySelector(".dropdown-toggle").addEventListener("click", () => {
+    document
+      .querySelector(".dropdown-toggle")
+      .setAttribute("aria-expanded", "true");
+    document.querySelector(".dropdown-toggle").classList.toggle("show");
+    document.querySelector(".DropMenu").classList.toggle("d-block");
+  });
+}
+
 //Check If There Is Token Before(Is The Client Signed In Before) ?
 function CheckingIfUserIsFounded() {
   if (localStorage.getItem("user")) {
@@ -153,25 +186,7 @@ function CheckingIfUserIsFounded() {
     LoginBtns.style.display = "none";
     loggedInUser.classList.remove("d-none");
 
-    loggedInUser.innerHTML = `
-    <div class="btn-group">
-      <button class="btn btn-secondary dropdown-toggle">
-        <img src=${
-          typeof JSON.parse(localStorage.getItem("user")).profile_image !=
-          "object"
-            ? JSON.parse(localStorage.getItem("user")).profile_image
-            : "../imgs/man_4140037.png"
-        }
-        style="width:25px; height:25px"
-        />
-        <span> ${JSON.parse(localStorage.getItem("user")).name}</span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
-        <li><button class="dropdown-item" type="button">Edit</button></li>
-        <li><button class="dropdown-item" type="button">Delete</button></li>
-      </ul>
-    </div>
-    `;
+    StylingTheLoggedUser();
   } else {
     LogOutBtn.style.display = "none";
     LoginBtns.style.display = "block";
@@ -210,16 +225,7 @@ function loginBtnClicked() {
 
           // FILLING PERSONAL DATA TO THE LOGGED IN USER
           loggedInUser.classList.remove("d-none");
-          loggedInUser.innerHTML = `
-          <img src=${
-            typeof res.data.user.profile_image != "object"
-              ? res.data.user?.profile_image
-              : "../imgs/man_4140037.png"
-          }
-          style="width:25px; height:25px"
-          />
-          <span> ${res.data.user?.name}</span>
-          `;
+          StylingTheLoggedUser(res);
           setTimeout(() => {
             ToastDiv.classList.remove("show");
           }, 2000);
