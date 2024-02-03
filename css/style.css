@@ -37,9 +37,37 @@ body {
   }
 }
 /*END STYLING BUBBLES*/
+#AddPostBtn,
+#ScrollTop {
+  filter: drop-shadow(2px 2px 2px gray);
+  position: fixed;
+  border-radius: 50%;
+  transition: all 0.5s;
+  animation: up 0.8s infinite linear alternate;
+  z-index: 1000;
+}
+#AddPostBtn {
+  right: 15px;
+  bottom: 30px;
+}
+#ScrollTop {
+  left: 12px;
+  bottom: 30px;
+}
+@keyframes up {
+  0% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
 
 header {
   filter: drop-shadow(2px 2px 3px black);
+}
+.navbar {
+  transition: all 0.5s;
 }
 .nav-link,
 .navbar-brand {

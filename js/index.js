@@ -24,6 +24,26 @@ navbarToggler.addEventListener("click", () => {
   navbarToggler.children[1].classList.toggle("appear");
 });
 
+window.onscroll = () => {
+  if (window.scrollY > 0) {
+    document.querySelector(".navbar").style.boxShadow =
+      "inset 1px 1px 11px 0px tomato";
+  } else {
+    document.querySelector(".navbar").style.boxShadow = "none";
+  }
+};
+
+let ScrollTop = document.getElementById("ScrollTop");
+window.onscroll = () => {
+  if (window.scrollY > 0) {
+    ScrollTop.classList.remove("d-none");
+    ScrollTop.addEventListener("click", () => {
+      window.scrollTo(0, 0);
+    });
+  } else {
+    ScrollTop.classList.add("d-none");
+  }
+};
 // CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
 let PostsContainer = document.querySelector(".posts .container");
 let AllPosts = [];
@@ -141,7 +161,7 @@ let ErrorMessage = document.getElementById("error_message");
 let ToastDiv = document.getElementById("liveToast");
 let LogOutBtn = document.getElementById("logOutBtn");
 let loggedInUser = document.querySelector(".loggedInUser");
-
+let AddPostBtn = document.getElementById("AddPostBtn");
 // REGISTER BUTTON ...
 let RegisterBtn = document.querySelector(".RegisterBtn");
 let RegisterModal = document.getElementById("registerModel");
@@ -153,8 +173,8 @@ function StylingTheLoggedUser(res) {
     <div class="btn-group">
       <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"  style="background:linear-gradient(to right, #ff5722, black);color:white;font-weight:bold">
         <img src=${
-          typeof JSON.parse(localStorage.getItem("user")).profile_image ||
-          res.data.user.profile_image != "object"
+          typeof JSON.parse(localStorage.getItem("user")).profile_image !=
+          "object"
             ? JSON.parse(localStorage.getItem("user")).profile_image
             : "../imgs/man_4140037.png"
         }
@@ -198,6 +218,7 @@ CheckingIfUserIsFounded();
 function ClickingOnSignOut() {
   LogOutBtn.addEventListener("click", () => {
     localStorage.removeItem("user");
+    AddPostBtn.classList.add("d-none");
     window.location.reload();
   });
 }
@@ -223,9 +244,12 @@ function loginBtnClicked() {
           LoginBtns.style.display = "none";
           ToastDiv.classList.toggle("show");
 
+          AddPostBtn.classList.remove("d-none");
+
           // FILLING PERSONAL DATA TO THE LOGGED IN USER
           loggedInUser.classList.remove("d-none");
           StylingTheLoggedUser(res);
+
           setTimeout(() => {
             ToastDiv.classList.remove("show");
           }, 2000);
@@ -233,7 +257,8 @@ function loginBtnClicked() {
       })
       .catch((err) => {
         ErrorMessage.classList.remove("d-none");
-        ErrorMessage.innerHTML += err.message + " !";
+        ErrorMessage.innerHTML = " ";
+        ErrorMessage.innerHTML += err.response.data.message + "! 😢";
       });
   });
 }
@@ -279,20 +304,18 @@ RegisterBtnForSubmit.addEventListener("click", () => {
       ToastDivBody.innerHTML = "You Had Registered In Successfuly 😇";
       ToastDiv.classList.toggle("show");
 
+      AddPostBtn.classList.remove("d-none");
+
       // FILLING PERSONAL DATA TO THE LOGGED IN USER
       loggedInUser.classList.remove("d-none");
-      loggedInUser.innerHTML = `
-                <img src=${
-                  typeof res.data.user.profile_image != "object"
-                    ? res.data.user?.profile_image
-                    : "../imgs/man_4140037.png"
-                }
-                style="width:25px; height:25px"
-                />
-                <span> ${res.data.user?.name}</span>
-                `;
+      StylingTheLoggedUser();
       setTimeout(() => {
         ToastDiv.classList.remove("show");
       }, 2000);
+    })
+    .catch((err) => {
+      document.getElementById("RegisterError").innerHTML = "";
+      document.getElementById("RegisterError").innerHTML =
+        err.response.data.message + "! 😢";
     });
 });

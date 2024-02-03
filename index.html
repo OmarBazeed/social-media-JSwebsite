@@ -8,6 +8,29 @@
     <title>social media project</title>
   </head>
   <body class="text-white overflow-visible">
+    <!-- ADD BUTTON -->
+    <button class="btn btn-primary d-none" type="button" id="AddPostBtn">
+      +
+    </button>
+    <!-- ENDING ADD BUTTON -->
+
+    <!-- SCROLL TOP -->
+    <button class="btn btn-success d-none" type="button" id="ScrollTop">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-arrow-up-circle"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"
+        />
+      </svg>
+    </button>
+    <!-- ENDING SCROLL TOP -->
     <!-- LOG IN MODAL -->
     <div
       class="modal fade"
@@ -24,9 +47,8 @@
             <p
               class="error_message d-none mb-0 ms-3 fw-bold text-decoration-capitalize"
               id="error_message"
-            >
-              😢
-            </p>
+              style="transition: 0.5s"
+            ></p>
             <button
               type="button"
               class="btn-close"
@@ -86,11 +108,10 @@
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">REGISTER</h1>
             <p
-              class="error_message d-none mb-0 ms-3 fw-bold text-decoration-capitalize"
-              id="error_message"
-            >
-              😢
-            </p>
+              class="Registererror_message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
+              id="RegisterError"
+              style="font-size: 13px"
+            ></p>
             <button
               type="button"
               class="btn-close"
