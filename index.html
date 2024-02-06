@@ -166,6 +166,78 @@
       </div>
     </div>
     <!-- ENDING REGISTER MODAL -->
+    <!-- CREATE POST MODAL -->
+    <div
+      class="modal fade"
+      id="createPostModel"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" id="createPostModelDialog">
+        <div class="modal-content bg-black border-1 border-secondary">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Add New Post
+            </h1>
+            <p
+              class="createPostModel-message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
+              id="RegisterError"
+            ></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-1">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >Title</label
+                >
+                <input type="text" class="form-control" id="titleContent" />
+              </div>
+              <div class="mb-1">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >body</label
+                >
+                <input type="text" class="form-control" id="bodyContent" />
+              </div>
+              <div class="mb-1">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >Picture</label
+                >
+                <input type="file" class="form-control" id="NewPicContent" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="addPostbtn">
+              Add
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger closeBost"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ENDING CREATE POST MODAL -->
 
     <!-- STARTING TOAST -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">

@@ -1,3 +1,6 @@
+html {
+  scrollbar-width: "smooth";
+}
 body {
   background-color: #1a1918;
 }
@@ -39,7 +42,7 @@ body {
 /*END STYLING BUBBLES*/
 #AddPostBtn,
 #ScrollTop {
-  filter: drop-shadow(2px 2px 2px gray);
+  filter: drop-shadow(1px 1px 1px gray);
   position: fixed;
   border-radius: 50%;
   transition: all 0.5s;

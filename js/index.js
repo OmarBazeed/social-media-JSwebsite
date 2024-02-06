@@ -24,15 +24,7 @@ navbarToggler.addEventListener("click", () => {
   navbarToggler.children[1].classList.toggle("appear");
 });
 
-window.onscroll = () => {
-  if (window.scrollY > 0) {
-    document.querySelector(".navbar").style.boxShadow =
-      "inset 1px 1px 11px 0px tomato";
-  } else {
-    document.querySelector(".navbar").style.boxShadow = "none";
-  }
-};
-
+// HANDLING ALL ABOUT WINDOW SCROLL
 let ScrollTop = document.getElementById("ScrollTop");
 window.onscroll = () => {
   if (window.scrollY > 0) {
@@ -40,10 +32,14 @@ window.onscroll = () => {
     ScrollTop.addEventListener("click", () => {
       window.scrollTo(0, 0);
     });
+    document.querySelector(".navbar").style.boxShadow =
+      "inset tomato -1px -1px 3px 0px";
   } else {
     ScrollTop.classList.add("d-none");
+    document.querySelector(".navbar").style.boxShadow = "none";
   }
 };
+
 // CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
 let PostsContainer = document.querySelector(".posts .container");
 let AllPosts = [];
@@ -85,6 +81,7 @@ FetchingPosts();
 // PUSHING POSTS TO HTML FILE
 function CreatingPosts() {
   AllPosts.forEach((post) => {
+    console.log(`${post.image.toString()}`);
     PostsContainer.innerHTML += `
         <div class="card bg-dark text-white mt-5" key=${post.id}>
         <h6 class="card-header">
@@ -101,21 +98,18 @@ function CreatingPosts() {
           <p class="d-inline ms-1">${post.author.username}</p>
         </h6>
         <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
+          <h5 class="card-title">${
+            post.title != null ? post.title : "Please Add A Title For Your Post"
+          } </h5>
           <img
-            src=${
-              post.image.length !== undefined
-                ? post.image
-                : "../imgs/2032772-Eric-Thomas-Quote-Champions-keep-going-when-they-don-t-have.jpg"
-            }
+            src="${post.image}"
             class="w-100 img-responsive img-thumbnail"
             alt="img"
           />
           <p class="text-secondary"> ${post.created_at} </p>
-          <p class="card-text">
-            With supporting text below as a natural lead-in to additional
-            content.
-          </p>
+          <p class="card-text"> ${
+            post.body != "" ? post.body : "Please Add A Body For Your Post"
+          } </p>
           <div class="d-flex align-items-center justify-content-start">
           <p class="text-decoration-underline mb-0">
             <svg
@@ -173,15 +167,16 @@ function StylingTheLoggedUser(res) {
     <div class="btn-group">
       <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"  style="background:linear-gradient(to right, #ff5722, black);color:white;font-weight:bold">
         <img src=${
-          typeof JSON.parse(localStorage.getItem("user")).profile_image !=
+          typeof JSON.parse(localStorage.getItem("user")).user.profile_image !=
           "object"
-            ? JSON.parse(localStorage.getItem("user")).profile_image
+            ? JSON.parse(localStorage.getItem("user")).user.profile_image
             : "../imgs/man_4140037.png"
         }
         style="width:25px; height:25px"
         />
         <span> ${
-          JSON.parse(localStorage.getItem("user")).name || res.data.user?.name
+          JSON.parse(localStorage.getItem("user")).user.name ||
+          res.data.user?.name
         }</span>
       </button>
       <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start DropMenu">
@@ -205,6 +200,7 @@ function CheckingIfUserIsFounded() {
     LogOutBtn.style.display = "block !important";
     LoginBtns.style.display = "none";
     loggedInUser.classList.remove("d-none");
+    AddPostBtn.classList.remove("d-none");
 
     StylingTheLoggedUser();
   } else {
@@ -234,8 +230,7 @@ function loginBtnClicked() {
       .then((res) => {
         if (res.data.token) {
           //KEEPING TOKEN , USER IN LOCAL STORAGE
-          localStorage.setItem("user-token", res.data.token);
-          localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("user", JSON.stringify(res.data));
 
           // CONTROLLING SOME ELEMENTS IN HTML
           LoginModal.style.display = "none";
@@ -292,7 +287,7 @@ RegisterBtnForSubmit.addEventListener("click", () => {
       name: newUserName.value,
     })
     .then((res) => {
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("user", JSON.stringify(res.data));
 
       //CONTROLLING SOME ITEMS IN HTML AFTER REGISTER BUTTON
       registerModal.classList.remove("d-block");
@@ -317,5 +312,57 @@ RegisterBtnForSubmit.addEventListener("click", () => {
       document.getElementById("RegisterError").innerHTML = "";
       document.getElementById("RegisterError").innerHTML =
         err.response.data.message + "! 😢";
+    });
+});
+
+let AddPostModal = document.getElementById("createPostModel");
+let closeBost = document.querySelector(".closeBost");
+let CreateNewPost = document.getElementById("addPostbtn");
+let TitleContent = document.getElementById("titleContent");
+let BodyContent = document.getElementById("bodyContent");
+let PicContent = document.getElementById("NewPicContent").files[0];
+
+AddPostBtn.onclick = () => {
+  AddPostModal.classList.add("show");
+  AddPostModal.classList.add("d-block");
+};
+closeBost.onclick = () => {
+  AddPostModal.classList.remove("show");
+  AddPostModal.classList.remove("d-block");
+};
+
+//CREATING NEW POST
+CreateNewPost.addEventListener("click", () => {
+  let formData = new FormData();
+  formData.append("title", TitleContent.value);
+  formData.append("body", BodyContent.value);
+  formData.append("picture", PicContent);
+
+  axios
+    .post(`${BaseURL}/posts`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("user")).token
+        }`,
+      },
+    })
+    .then((res) => {
+      console.log(PicContent);
+      AddPostModal.classList.remove("d-block");
+      document.getElementById("createPostModelDialog").style.display = "none";
+
+      ToastDivStrong.innerHTML = "NEW POST Status";
+      ToastDivBody.innerHTML = "You Created A New Post Successfuly 😇";
+      ToastDiv.classList.toggle("show");
+
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
+    })
+    .catch((err) => {
+      document.querySelector(".createPostModel-message").innerHTML = "";
+      document.querySelector(".createPostModel-message").innerHTML =
+        err.response.data.message + "😢";
     });
 });
