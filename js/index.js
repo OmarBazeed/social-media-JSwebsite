@@ -102,7 +102,7 @@ function CreatingPosts() {
             post.title != null ? post.title : "Please Add A Title For Your Post"
           } </h5>
           <img
-            src="${post.image}"
+            src=${post.image}
             class="w-100 img-responsive img-thumbnail"
             alt="img"
           />
@@ -263,6 +263,7 @@ loginBtnClicked();
 const newUserName = document.getElementById("NewUsername");
 const newUserUName = document.getElementById("Newusername");
 const newUserPassword = document.getElementById("Newpassword");
+const newUserPicture = document.getElementById("NewProfilePic").files[0];
 const RegisterBtnForSubmit = document.getElementById("register-btn");
 let registerModal = document.getElementById("registerModel");
 let ToastDivStrong = document.querySelector("#liveToast strong");
@@ -280,11 +281,16 @@ CloseRegisterBtn.addEventListener("click", () => {
 
 // CLICKING ON REGISTER BUTTON TO SUBMIT
 RegisterBtnForSubmit.addEventListener("click", () => {
+  let RegisterformData = new FormData();
+  RegisterformData.append("username", newUserUName.value);
+  RegisterformData.append("password", newUserPassword.value);
+  RegisterformData.append("name", newUserName.value);
+  RegisterformData.append("picture", newUserPicture);
   axios
-    .post(`${BaseURL}/register`, {
-      username: newUserUName.value,
-      password: newUserPassword.value,
-      name: newUserName.value,
+    .post(`${BaseURL}/register`, RegisterformData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
     .then((res) => {
       localStorage.setItem("user", JSON.stringify(res.data));
@@ -303,7 +309,8 @@ RegisterBtnForSubmit.addEventListener("click", () => {
 
       // FILLING PERSONAL DATA TO THE LOGGED IN USER
       loggedInUser.classList.remove("d-none");
-      StylingTheLoggedUser();
+      StylingTheLoggedUser(res);
+
       setTimeout(() => {
         ToastDiv.classList.remove("show");
       }, 2000);
@@ -315,6 +322,7 @@ RegisterBtnForSubmit.addEventListener("click", () => {
     });
 });
 
+// Variables For Add New Post
 let AddPostModal = document.getElementById("createPostModel");
 let closeBost = document.querySelector(".closeBost");
 let CreateNewPost = document.getElementById("addPostbtn");
@@ -331,7 +339,7 @@ closeBost.onclick = () => {
   AddPostModal.classList.remove("d-block");
 };
 
-//CREATING NEW POST
+//CLICKING ON PLUS BUTTON FOR CREATING NEW POST
 CreateNewPost.addEventListener("click", () => {
   let formData = new FormData();
   formData.append("title", TitleContent.value);
@@ -356,9 +364,9 @@ CreateNewPost.addEventListener("click", () => {
       ToastDivBody.innerHTML = "You Created A New Post Successfuly 😇";
       ToastDiv.classList.toggle("show");
 
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     })
     .catch((err) => {
       document.querySelector(".createPostModel-message").innerHTML = "";
