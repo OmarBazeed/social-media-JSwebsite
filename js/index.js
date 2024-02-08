@@ -46,6 +46,8 @@ let AllPosts = [];
 
 // FETCHING POSTS...
 //async
+let currentPage = 1;
+lastPage = 1;
 function FetchingPosts() {
   //todo: FETCHING POSTS WITH ==> fetch() FUNCTION ... ASYNC & AWAIT
   // let res = await fetch("https://tarmeezacademy.com/api/v1/posts").then((res) =>
@@ -58,7 +60,7 @@ function FetchingPosts() {
   let FetchingPots = new Promise((resolve, reject) => {
     let Request = new XMLHttpRequest();
 
-    Request.open("get", `${BaseURL}/posts`);
+    Request.open("get", `${BaseURL}/posts?limit=15&page=${currentPage}`);
     Request.responseType = "json";
 
     Request.onload = () => {
@@ -71,6 +73,8 @@ function FetchingPosts() {
     Request.send();
   });
   FetchingPots.then((res) => {
+    lastPage = res.meta.last_page;
+
     AllPosts = res.data;
     CreatingPosts();
   });
@@ -78,12 +82,30 @@ function FetchingPosts() {
 }
 FetchingPosts();
 
+/*----------------------------------------------------------------------------------------------------------------------------------
+|--// ONE OF THE MOST IMPORTANT FUNCTIONS IN JAVASCRIPT IS HANDLING WITH PAGINATION
+|--//todo: Concept Of Pagination Is ==> When You Reach The End Of Page It Requests The Upcomming Posts Not TO Overload On Server And Brwoser So When Call Function Which FetchProducts() With New Ones When Window Reach The End Of Scroll
+------------------------------------------------------------------------------------------------------------------------------------*/
+window.addEventListener("scroll", () => {
+  // This Variable For Cakculating The End Of Page Scroll
+  let endOfPage =
+    window.scrollY + window.innerHeight + 1 >=
+    document.documentElement.scrollHeight;
+  // When We Reach It We Have To Change The Page Where We FetchProducts To The Next One Then Fetch The New Products
+  if (endOfPage && currentPage < lastPage) {
+    console.log(lastPage);
+    currentPage += 1;
+    FetchingPosts();
+  }
+});
+
 // PUSHING POSTS TO HTML FILE
 function CreatingPosts() {
   AllPosts.forEach((post) => {
-    console.log(`${post.image.toString()}`);
     PostsContainer.innerHTML += `
-        <div class="card bg-dark text-white mt-5" key=${post.id}>
+
+  <div class="card bg-dark text-white mt-5" key=${post.id}>
+    <a href="" class="text-decoration-none SinglePost">
         <h6 class="card-header">
           <img
             src=${
@@ -102,7 +124,11 @@ function CreatingPosts() {
             post.title != null ? post.title : "Please Add A Title For Your Post"
           } </h5>
           <img
-            src=${post.image}
+            src= ${
+              typeof post.image !== "object"
+                ? post.image
+                : "../imgs/2032772-Eric-Thomas-Quote-Champions-keep-going-when-they-don-t-have.jpg"
+            }
             class="w-100 img-responsive img-thumbnail"
             alt="img"
           />
@@ -140,8 +166,13 @@ function CreatingPosts() {
           </div>
           </div>
         </div>
-      </div>
+    </a>
+  </div>
         `;
+  });
+
+  document.querySelectorAll(".SinglePost").forEach((ele) => {
+    ele.addEventListener("click", () => {});
   });
 }
 
@@ -173,6 +204,7 @@ function StylingTheLoggedUser(res) {
             : "../imgs/man_4140037.png"
         }
         style="width:25px; height:25px"
+        class='rounded-5 me-3'
         />
         <span> ${
           JSON.parse(localStorage.getItem("user")).user.name ||
@@ -185,6 +217,7 @@ function StylingTheLoggedUser(res) {
       </ul>
     </div>
     `;
+  // Clicking On User Profile
   document.querySelector(".dropdown-toggle").addEventListener("click", () => {
     document
       .querySelector(".dropdown-toggle")
@@ -254,17 +287,24 @@ function loginBtnClicked() {
         ErrorMessage.classList.remove("d-none");
         ErrorMessage.innerHTML = " ";
         ErrorMessage.innerHTML += err.response.data.message + "! 😢";
+        document.querySelectorAll(".loginInputs input").forEach((ele) => {
+          ele.style.animation = "none";
+          setTimeout(() => {
+            ele.style.animation = "buzzle 0.5s 1 ease-in-out alternate";
+          }, 100);
+        });
       });
   });
 }
 loginBtnClicked();
 
-// CLICKING ON REGISTER BUTTON TO SUBMIT ...
+// CLICKING ON REGISTER BUTTON IN HEADER TO OPEN MODEL , ADD NEW USER ...
 const newUserName = document.getElementById("NewUsername");
 const newUserUName = document.getElementById("Newusername");
 const newUserPassword = document.getElementById("Newpassword");
-const newUserPicture = document.getElementById("NewProfilePic").files[0];
+const newUserPicture = document.getElementById("NewProfilePic");
 const RegisterBtnForSubmit = document.getElementById("register-btn");
+
 let registerModal = document.getElementById("registerModel");
 let ToastDivStrong = document.querySelector("#liveToast strong");
 let ToastDivBody = document.querySelector("#liveToast .toast-body");
@@ -285,7 +325,7 @@ RegisterBtnForSubmit.addEventListener("click", () => {
   RegisterformData.append("username", newUserUName.value);
   RegisterformData.append("password", newUserPassword.value);
   RegisterformData.append("name", newUserName.value);
-  RegisterformData.append("picture", newUserPicture);
+  RegisterformData.append("image", newUserPicture.files[0]);
   axios
     .post(`${BaseURL}/register`, RegisterformData, {
       headers: {
@@ -319,6 +359,12 @@ RegisterBtnForSubmit.addEventListener("click", () => {
       document.getElementById("RegisterError").innerHTML = "";
       document.getElementById("RegisterError").innerHTML =
         err.response.data.message + "! 😢";
+      document.querySelectorAll(".regiterInputs input").forEach((ele) => {
+        ele.style.animation = "none";
+        setTimeout(() => {
+          ele.style.animation = "buzzle 0.5s 1 ease-in-out alternate";
+        }, 100);
+      });
     });
 });
 
@@ -328,7 +374,7 @@ let closeBost = document.querySelector(".closeBost");
 let CreateNewPost = document.getElementById("addPostbtn");
 let TitleContent = document.getElementById("titleContent");
 let BodyContent = document.getElementById("bodyContent");
-let PicContent = document.getElementById("NewPicContent").files[0];
+let PicContent = document.getElementById("NewPicContent");
 
 AddPostBtn.onclick = () => {
   AddPostModal.classList.add("show");
@@ -344,7 +390,7 @@ CreateNewPost.addEventListener("click", () => {
   let formData = new FormData();
   formData.append("title", TitleContent.value);
   formData.append("body", BodyContent.value);
-  formData.append("picture", PicContent);
+  formData.append("image", PicContent.files[0]);
 
   axios
     .post(`${BaseURL}/posts`, formData, {
@@ -372,5 +418,11 @@ CreateNewPost.addEventListener("click", () => {
       document.querySelector(".createPostModel-message").innerHTML = "";
       document.querySelector(".createPostModel-message").innerHTML =
         err.response.data.message + "😢";
+      document.querySelectorAll(".addPostInputs input").forEach((ele) => {
+        ele.style.animation = "none";
+        setTimeout(() => {
+          ele.style.animation = "buzzle 0.5s 1 ease-in-out alternate";
+        }, 100);
+      });
     });
 });

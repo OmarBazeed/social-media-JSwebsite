@@ -58,7 +58,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="mb-3">
+              <div class="mb-3 loginInputs">
                 <label for="username" class="col-form-label">username : </label>
                 <input
                   type="text"
@@ -67,7 +67,7 @@
                   value="omarB"
                 />
               </div>
-              <div class="mb-3">
+              <div class="mb-3 loginInputs">
                 <label for="password" class="col-form-label">password :</label>
                 <input
                   type="password"
@@ -121,7 +121,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="mb-1">
+              <div class="mb-1 regiterInputs">
                 <label
                   for="NewUsername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -130,7 +130,7 @@
                 >
                 <input type="text" class="form-control" id="NewUsername" />
               </div>
-              <div class="mb-1">
+              <div class="mb-1 regiterInputs">
                 <label
                   for="Newusername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -139,7 +139,7 @@
                 </label>
                 <input type="text" class="form-control" id="Newusername" />
               </div>
-              <div class="mb-1">
+              <div class="mb-1 regiterInputs">
                 <label
                   for="Newpassword"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -148,7 +148,7 @@
                 >
                 <input type="password" class="form-control" id="Newpassword" />
               </div>
-              <div class="mb-1">
+              <div class="mb-1 regiterInputs">
                 <label
                   for="NewProfilePic"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -186,9 +186,9 @@
       <div class="modal-dialog" id="createPostModelDialog">
         <div class="modal-content bg-black border-1 border-secondary">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
+            <h3 class="modal-title fs-5" id="exampleModalLabel">
               Add New Post
-            </h1>
+            </h3>
             <p
               class="createPostModel-message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
               id="RegisterError"
@@ -202,7 +202,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="mb-1">
+              <div class="mb-1 addPostInputs">
                 <label
                   for="NewUsername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -211,16 +211,20 @@
                 >
                 <input type="text" class="form-control" id="titleContent" />
               </div>
-              <div class="mb-1">
+              <div class="mb-1 addPostInputs">
                 <label
                   for="NewUsername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
                   style="letter-spacing: 2px"
                   >body</label
                 >
-                <input type="text" class="form-control" id="bodyContent" />
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="bodyContent"
+                ></textarea>
               </div>
-              <div class="mb-1">
+              <div class="mb-1 addPostInputs">
                 <label
                   for="NewUsername"
                   class="col-form-label text-capitalize fw-bold text-secondary"
@@ -413,7 +417,6 @@
         </nav>
       </div>
     </header>
-
     <!-- ENDING HEADER -->
 
     <!-- POSTS SECTION -->

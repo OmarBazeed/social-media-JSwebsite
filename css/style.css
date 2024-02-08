@@ -40,6 +40,7 @@ body {
   }
 }
 /*END STYLING BUBBLES*/
+
 #AddPostBtn,
 #ScrollTop {
   filter: drop-shadow(1px 1px 1px gray);
@@ -161,4 +162,23 @@ header {
 
 .error_message {
   color: tomato;
+}
+
+.regiterInputs {
+  transition: all 0.5s;
+}
+
+@keyframes buzzle {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(5px);
+  }
+}
+.SinglePost {
+  color: inherit;
 }
