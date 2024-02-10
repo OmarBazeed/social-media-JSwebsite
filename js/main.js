@@ -84,7 +84,7 @@ FetchingPosts();
 
 /*----------------------------------------------------------------------------------------------------------------------------------
 |--// ONE OF THE MOST IMPORTANT FUNCTIONS IN JAVASCRIPT IS HANDLING WITH PAGINATION
-|--//todo: Concept Of Pagination Is ==> When You Reach The End Of Page It Requests The Upcomming Posts Not TO Overload On Server And Brwoser So When Call Function Which FetchProducts() With New Ones When Window Reach The End Of Scroll
+|--//todo: Concept Of Pagination ( Infinite Scrolling ) Is ==> When You Reach The End Of Page It Requests The Upcomming Posts Not TO Overload On Server And Brwoser So When Call Function Which FetchProducts() With New Ones When Window Reach The End Of Scroll
 ------------------------------------------------------------------------------------------------------------------------------------*/
 window.addEventListener("scroll", () => {
   // This Variable For Cakculating The End Of Page Scroll
@@ -93,7 +93,6 @@ window.addEventListener("scroll", () => {
     document.documentElement.scrollHeight;
   // When We Reach It We Have To Change The Page Where We FetchProducts To The Next One Then Fetch The New Products
   if (endOfPage && currentPage < lastPage) {
-    console.log(lastPage);
     currentPage += 1;
     FetchingPosts();
   }
@@ -103,9 +102,10 @@ window.addEventListener("scroll", () => {
 function CreatingPosts() {
   AllPosts.forEach((post) => {
     PostsContainer.innerHTML += `
-
-  <div class="card bg-dark text-white mt-5" key=${post.id}>
-    <a href="" class="text-decoration-none SinglePost">
+  <div class="card bg-dark text-white mt-5" key=${
+    post.id
+  } style="cursor:pointer" >
+    <a href="http://127.0.0.1:5501/singlepage.html" class="text-decoration-none SinglePost" disabled>
         <h6 class="card-header">
           <img
             src=${
@@ -170,14 +170,20 @@ function CreatingPosts() {
   </div>
         `;
   });
+  ClickingOnSinglePost();
+}
 
-  document.querySelectorAll(".SinglePost").forEach((ele) => {
-    ele.addEventListener("click", () => {});
+function ClickingOnSinglePost() {
+  document.querySelectorAll(".SinglePost").forEach((ele, indx) => {
+    ele.addEventListener("click", () => {
+      console.log(AllPosts[indx]?.id);
+      localStorage.setItem("postId", AllPosts[indx]?.id);
+    });
   });
 }
 
 // LOGIN FUNCTION
-let LoginBtn = document.getElementById("login-btn");
+let LoginBtn = document.getElementById("loginbtn");
 let userName = document.getElementById("username");
 let Password = document.getElementById("password");
 let LoginModal = document.getElementById("loginModal");
@@ -253,8 +259,10 @@ function ClickingOnSignOut() {
 }
 ClickingOnSignOut();
 
+//FNCTION CLICKING ON LOGIN
 function loginBtnClicked() {
   LoginBtn.addEventListener("click", () => {
+    console.log("first");
     axios
       .post(`${BaseURL}/login`, {
         username: userName.value,

@@ -3,9 +3,365 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>Document</title>
   </head>
   <body>
-    single_page
+    <!-- STARTING TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        id="liveToast"
+        class="toast bg-dark"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header bg-black">
+          <img
+            src="imgs/check_5610944.png"
+            class="rounded me-2"
+            style="width: 25px; height: 25px"
+            alt="..."
+          />
+          <strong class="me-auto text-light ToastStrong">Log-in Status</strong>
+          <button
+            type="button"
+            class="btn-close bg-light"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">You Had Singned In Successfuly 😇</div>
+      </div>
+    </div>
+    <!-- ENDING TOAST -->
+    <!-- LOG IN MODAL -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      s
+      <div class="modal-dialog">
+        <div class="modal-content bg-black border-1 border-secondary">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">LOG IN</h1>
+            <p
+              class="error_message d-none mb-0 ms-3 fw-bold text-decoration-capitalize"
+              id="error_message"
+              style="transition: 0.5s"
+            ></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3 loginInputs">
+                <label for="username" class="col-form-label">username : </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  value="omarB"
+                />
+              </div>
+              <div class="mb-3 loginInputs">
+                <label for="password" class="col-form-label">password :</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  value="123456"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="loginbtn">
+              Log in
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ENDING LOG IN MODAL -->
+
+    <!-- REGISTER MODAL -->
+    <div
+      class="modal fade"
+      id="registerModel"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" id="registerDialog">
+        <div class="modal-content bg-black border-1 border-secondary">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">REGISTER</h1>
+            <p
+              class="Registererror_message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
+              id="RegisterError"
+              style="font-size: 13px"
+            ></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-1 regiterInputs">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >name</label
+                >
+                <input type="text" class="form-control" id="NewUsername" />
+              </div>
+              <div class="mb-1 regiterInputs">
+                <label
+                  for="Newusername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >username
+                </label>
+                <input type="text" class="form-control" id="Newusername" />
+              </div>
+              <div class="mb-1 regiterInputs">
+                <label
+                  for="Newpassword"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >password</label
+                >
+                <input type="password" class="form-control" id="Newpassword" />
+              </div>
+              <div class="mb-1 regiterInputs">
+                <label
+                  for="NewProfilePic"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >Picture</label
+                >
+                <input type="file" class="form-control" id="NewProfilePic" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="register-btn">
+              Register
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger closeRegister"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ENDING REGISTER MODAL -->
+    <div class="container">
+      <!-- STARTING HEADER -->
+      <header class="my-header sticky-top">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg bg-dark">
+            <div class="container-fluid">
+              <a
+                class="navbar-brand p-2 text-light fw-bold text-uppercase"
+                href="http://127.0.0.1:5501/index.html"
+                style="letter-spacing: 3px"
+                >Spac<span>e</span></a
+              >
+              <button
+                class="navbar-toggler btn-outline-none ms-5"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-chevron-down d-block"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+                  />
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-chevron-up d-none"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"
+                  />
+                </svg>
+              </button>
+              <div
+                class="collapse navbar-collapse ms-5"
+                id="navbarNavAltMarkup text-light"
+              >
+                <div class="navbar-nav">
+                  <a
+                    class="nav-link mt-sm-2 p-2 text-light mx-2 active"
+                    aria-current="page"
+                    href="#"
+                    >Home</a
+                  >
+                  <a class="nav-link mt-sm-2 p-2 text-light mx-2" href="#"
+                    >Profile</a
+                  >
+                </div>
+              </div>
+              <div
+                class="mt-sm-3 text-sm-center mt-sm-3 me-sm-0 mx-sm-auto mx-4"
+              >
+                <div class="buttons">
+                  <button
+                    class="btn btn-outline-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#loginModal"
+                  >
+                    Log In
+                  </button>
+                  <button class="btn btn-outline-secondary RegisterBtn">
+                    Register
+                  </button>
+                </div>
+                <section class="d-flex align-items-center m-auto">
+                  <div class="loggedInUser d-none"></div>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger ms-3"
+                    id="logOutBtn"
+                  >
+                    Log out
+                  </button>
+                </section>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+      <!-- ENDING HEADER -->
+      <div class="mainDiv"></div>
+    </div>
   </body>
+  <script src="node_modules/axios/dist/axios.min.js"></script>
+  <script src="js/commonLogic.js"></script>
+  <script>
+    let postId = localStorage.getItem("postId");
+    console.log(postId);
+    axios
+      .get(`https://tarmeezacademy.com/api/v1/posts/${postId}`)
+      .then((res) => {
+        let post = res.data.data;
+        console.log(post);
+        document.querySelector(".mainDiv").innerHTML = `
+              <div class="card bg-dark text-white mt-5" key=${post.id}>
+                    <h6 class="card-header">
+                      <img
+                        src=${
+                          typeof post.author.profile_image !== "object"
+                            ? post.author.profile_image
+                            : "../imgs/man_4140037.png"
+                        }
+                        style="width: 40px; height: 40px"
+                        alt="person"
+                        class="rounded-5"
+                      />
+                      <p class="d-inline ms-1">${post.author.username}</p>
+                    </h6>
+                    <div class="card-body">
+                      <h5 class="card-title">${
+                        post.title != null
+                          ? post.title
+                          : "Please Add A Title For Your Post"
+                      } </h5>
+                      <img
+                        src= ${
+                          typeof post.image !== "object"
+                            ? post.image
+                            : "../imgs/2032772-Eric-Thomas-Quote-Champions-keep-going-when-they-don-t-have.jpg"
+                        }
+                        class="w-100 img-responsive img-thumbnail"
+                        alt="img"
+                      />
+                      <p class="text-secondary"> ${post.created_at} </p>
+                      <p class="card-text"> ${
+                        post.body != ""
+                          ? post.body
+                          : "Please Add A Body For Your Post"
+                      } </p>
+                      <div class="d-flex align-items-center justify-content-start">
+                      <p class="text-decoration-underline mb-0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-pen fw-bold fs-3"
+                          viewBox="0 0 16 16"
+                          style="margin-top: -4px"
+                        >
+                          <path
+                            d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
+                          />
+                        </svg>
+                        (${post.comments_count}) comments
+                      </p>
+                      <div class="tags ms-3">
+                      ${
+                        post.tags.length > 0
+                          ? post.tagsforEach((el) => {
+                              `<span>${el.name}</span>`;
+                            })
+                          : ` <span class="btn btn-danger opacity-75 text-white rounded-5">
+                          No Tags 😢
+                          </span>`
+                      }
+                      </div>
+                      </div>
+                    </div>
+              </div>
+      `;
+      })
+      .catch((err) => {
+        document.querySelector(".mainDiv").innerHTML = `
+        <div class="text-danger fs-2 fw-bold text-capitalize">${err.response.data.message} </div>
+        `;
+      });
+  </script>
+  <!-- <script src="js/main.js"></script> -->
 </html>
