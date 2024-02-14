@@ -32,7 +32,9 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="toast-body">You Had Singned In Successfuly 😇</div>
+        <div class="toast-body text-light">
+          You Had Singned In Successfuly 😇
+        </div>
       </div>
     </div>
     <!-- ENDING TOAST -->
@@ -46,9 +48,11 @@
     >
       s
       <div class="modal-dialog">
-        <div class="modal-content bg-black border-1 border-secondary">
+        <div class="modal-content bg-black border-1 fw-bold">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">LOG IN</h1>
+            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">
+              LOG IN
+            </h1>
             <p
               class="error_message d-none mb-0 ms-3 fw-bold text-decoration-capitalize"
               id="error_message"
@@ -64,7 +68,9 @@
           <div class="modal-body">
             <form>
               <div class="mb-3 loginInputs">
-                <label for="username" class="col-form-label">username : </label>
+                <label for="username" class="col-form-label text-secondary"
+                  >username :
+                </label>
                 <input
                   type="text"
                   class="form-control"
@@ -73,7 +79,9 @@
                 />
               </div>
               <div class="mb-3 loginInputs">
-                <label for="password" class="col-form-label">password :</label>
+                <label for="password" class="col-form-label text-secondary"
+                  >password :</label
+                >
                 <input
                   type="password"
                   class="form-control"
@@ -111,7 +119,12 @@
       <div class="modal-dialog" id="registerDialog">
         <div class="modal-content bg-black border-1 border-secondary">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">REGISTER</h1>
+            <h1
+              class="modal-title fs-5 fw-bold text-white"
+              id="exampleModalLabel"
+            >
+              REGISTER
+            </h1>
             <p
               class="Registererror_message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
               id="RegisterError"
@@ -180,8 +193,8 @@
       </div>
     </div>
     <!-- ENDING REGISTER MODAL -->
+    <!-- STARTING HEADER -->
     <div class="container">
-      <!-- STARTING HEADER -->
       <header class="my-header sticky-top">
         <div class="container">
           <nav class="navbar navbar-expand-lg bg-dark">
@@ -252,6 +265,7 @@
                     class="btn btn-outline-success"
                     data-bs-toggle="modal"
                     data-bs-target="#loginModal"
+                    id="loginOpenModal"
                   >
                     Log In
                   </button>
@@ -274,20 +288,75 @@
           </nav>
         </div>
       </header>
-      <!-- ENDING HEADER -->
+    </div>
+    <!-- ENDING HEADER -->
+    <!-- STARTING INNER CONTENT -->
+    <div class="container">
+      <p
+        class="PostHeader text-danger text-center fw-bold text-capitalize my-3"
+      ></p>
       <div class="mainDiv"></div>
     </div>
+    <!-- ENDING INNER CONTENT -->
   </body>
+  <!-- bootstrap js file -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- axios js file  -->
   <script src="node_modules/axios/dist/axios.min.js"></script>
-  <script src="js/commonLogic.js"></script>
+  <!-- main/global login js -->
+  <script src="js/mainLogic.js"></script>
   <script>
-    let postId = localStorage.getItem("postId");
-    console.log(postId);
+    // getting any query params from ? to end of url
+    let searchParams = window.location.search;
+    // providing my query params to object / class URLSearchParams(); to enable us to use get() func.
+    let queryParams = new URLSearchParams(searchParams);
+
+    let postId = queryParams.get("postid");
+
+    function ClickingOnComments() {
+      console.log(document.querySelector(".commentsContainer"));
+      document
+        .querySelector(".commentsContainer")
+        .classList.toggle("makingVisible");
+    }
+
     axios
       .get(`https://tarmeezacademy.com/api/v1/posts/${postId}`)
       .then((res) => {
         let post = res.data.data;
-        console.log(post);
+
+        // Showing The Comments In The Comments Container
+        let commentsContent = document.createElement("div");
+        post.comments?.length > 0 &&
+          post.comments.forEach((ele) => {
+            let oneComment = document.createElement("div");
+            oneComment.style.backgroundColor = "gray";
+            oneComment.innerHTML = `
+          <section>
+            <div>
+              <img src=${
+                ele.author.profile_image != {}
+                  ? ele.author?.profile_image
+                  : "imgs/man_4140037.png"
+              }
+              alt="..."
+              class="rounded-5"
+              style="width:20px;height:20px"/>
+              <span class="text-black fw-bold ms-2">${
+                ele.author.email != null ? ele.author.email : "no email founded"
+              } </span>
+            </div>
+            <div>
+              <p class="ms-4">${ele.body} </p>
+            </div>
+          </section>
+            `;
+            commentsContent.append(oneComment);
+          });
+
+        // Creating The Post Model
+        document.querySelector(".PostHeader").innerHTML =
+          "Hello : " + post.author.name + " 🤝 ";
         document.querySelector(".mainDiv").innerHTML = `
               <div class="card bg-dark text-white mt-5" key=${post.id}>
                     <h6 class="card-header">
@@ -317,6 +386,7 @@
                         }
                         class="w-100 img-responsive img-thumbnail"
                         alt="img"
+                        style="max-height: 75vh"
                       />
                       <p class="text-secondary"> ${post.created_at} </p>
                       <p class="card-text"> ${
@@ -325,7 +395,7 @@
                           : "Please Add A Body For Your Post"
                       } </p>
                       <div class="d-flex align-items-center justify-content-start">
-                      <p class="text-decoration-underline mb-0">
+                      <p class="mb-0 commentsP">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
@@ -339,7 +409,14 @@
                             d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
                           />
                         </svg>
-                        (${post.comments_count}) comments
+                        <span>  (${post.comments_count}) comments </span>
+                            <span calss="d-block">
+                              ${
+                                post.comments.length > 0
+                                  ? "<p class='mb-0 ms-3 rounded-5' style='cursor:pointer' onclick='ClickingOnComments()'>🔻</p> "
+                                  : "<p class='mb-0 ms-3 rounded-5' style='cursor:pointer'>🔺</p>"
+                              }
+                        </span>
                       </p>
                       <div class="tags ms-3">
                       ${
@@ -347,21 +424,23 @@
                           ? post.tagsforEach((el) => {
                               `<span>${el.name}</span>`;
                             })
-                          : ` <span class="btn btn-danger opacity-75 text-white rounded-5">
-                          No Tags 😢
-                          </span>`
+                          : `<span class="bg-secondary p-2 opacity-75 text-white rounded-5 ms-5">
+                            No Tags 😢
+                            </span>`
                       }
                       </div>
-                      </div>
-                    </div>
               </div>
-      `;
+              <div style='opacity:0' class="mt-4 commentsContainer d-none">
+                ${commentsContent.innerHTML}
+              </div>
+          </div>
+            </div>
+                          `;
       })
       .catch((err) => {
-        document.querySelector(".mainDiv").innerHTML = `
-        <div class="text-danger fs-2 fw-bold text-capitalize">${err.response.data.message} </div>
-        `;
+        document.querySelector(
+          ".mainDiv"
+        ).innerHTML = `<div class="text-danger fs-2 fw-bold text-capitalize">${err.response?.data?.message} </div>`;
       });
   </script>
-  <!-- <script src="js/main.js"></script> -->
 </html>

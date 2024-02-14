@@ -182,3 +182,11 @@ header {
 .SinglePost {
   color: inherit;
 }
+.commentsContainer {
+  transition: 0.5s all;
+}
+
+.makingVisible {
+  opacity: 1 !important;
+  display: block !important;
+}
