@@ -319,19 +319,41 @@
         .querySelector(".commentsContainer")
         .classList.toggle("makingVisible");
     }
+    let token = JSON.parse(localStorage.getItem("user")).token;
 
+    //CLICKING ON ADD BUTTON TO ADD NEW COMMENT
+    function AddingNewComment() {
+      axios
+        .post(
+          `${BaseURL}/posts/${postId}/comments`,
+          {
+            body: document.querySelector(".commentInput").value,
+          },
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          window.location.reload();
+        });
+    }
+
+    //FETCHING POST CONTENT USING AXIOS
     axios
-      .get(`https://tarmeezacademy.com/api/v1/posts/${postId}`)
+      .get(`${BaseURL}/posts/${postId}`)
       .then((res) => {
         let post = res.data.data;
 
         // Showing The Comments In The Comments Container
-        let commentsContent = document.createElement("div");
-        post.comments?.length > 0 &&
-          post.comments.forEach((ele) => {
-            let oneComment = document.createElement("div");
-            oneComment.style.backgroundColor = "gray";
-            oneComment.innerHTML = `
+        function ShowingTheComments() {
+          let commentsContent = document.createElement("div");
+          post.comments?.length > 0 &&
+            post.comments.forEach((ele) => {
+              let oneComment = document.createElement("div");
+              oneComment.style.backgroundColor = "gray";
+              oneComment.innerHTML = `
           <section>
             <div>
               <img src=${
@@ -351,15 +373,18 @@
             </div>
           </section>
             `;
-            commentsContent.append(oneComment);
-          });
+              commentsContent.append(oneComment);
+            });
+
+          return commentsContent.innerHTML;
+        }
 
         // Creating The Post Model
         document.querySelector(".PostHeader").innerHTML =
           "Hello : " + post.author.name + " 🤝 ";
         document.querySelector(".mainDiv").innerHTML = `
-              <div class="card bg-dark text-white mt-5" key=${post.id}>
-                    <h6 class="card-header">
+      <div class="card bg-dark text-white mt-5" key=${post.id}>
+          <h6 class="card-header">
                       <img
                         src=${
                           typeof post.author.profile_image !== "object"
@@ -431,10 +456,14 @@
                       </div>
               </div>
               <div style='opacity:0' class="mt-4 commentsContainer d-none">
-                ${commentsContent.innerHTML}
+                ${ShowingTheComments()}
+              </div>
+              <div class="addNewComment mt-4">
+                <input type="text" class='p-1 form-control commentInput' placeholder="Write Your Comment" />
+                <button type="submit" class="AddPostBtn btn btn-primary my-1" onclick="AddingNewComment()"> Add </button>
               </div>
           </div>
-            </div>
+      </div>
                           `;
       })
       .catch((err) => {
