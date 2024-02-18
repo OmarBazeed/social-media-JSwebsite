@@ -298,6 +298,13 @@
       <div class="mainDiv"></div>
     </div>
     <!-- ENDING INNER CONTENT -->
+    <div
+      class="alert alert-danger d-none"
+      role="alert"
+      style="position: fixed; right: 0px; top: 20px"
+    >
+      You have To Sign in To Add New Comment!
+    </div>
   </body>
   <!-- bootstrap js file -->
   <script src="js/bootstrap.min.js"></script>
@@ -319,25 +326,41 @@
         .querySelector(".commentsContainer")
         .classList.toggle("makingVisible");
     }
-    let token = JSON.parse(localStorage.getItem("user")).token;
 
     //CLICKING ON ADD BUTTON TO ADD NEW COMMENT
     function AddingNewComment() {
-      axios
-        .post(
-          `${BaseURL}/posts/${postId}/comments`,
-          {
-            body: document.querySelector(".commentInput").value,
-          },
-          {
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          window.location.reload();
-        });
+      let token = JSON.parse(localStorage.getItem("user"))?.token;
+      token
+        ? axios
+            .post(
+              `${BaseURL}/posts/${postId}/comments`,
+              {
+                body: document.querySelector(".commentInput").value,
+              },
+              {
+                headers: {
+                  authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((res) => {
+              document.querySelector(".ToastStrong").innerHTML =
+                "Adding New Comments";
+              document.querySelector(".toast-body").innerHTML =
+                "You Have Added A new Comment 👌 ";
+              document.querySelector(".toast").classList.toggle("show");
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            })
+            .catch((err) => {
+              document.querySelector(".addError").innerHTML =
+                err.response.data.message + "😲";
+            })
+        : document.querySelector(".alert").classList.remove("d-none");
+      setTimeout(() => {
+        document.querySelector(".alert").classList.add("d-none");
+      }, 750);
     }
 
     //FETCHING POST CONTENT USING AXIOS
@@ -379,7 +402,7 @@
           return commentsContent.innerHTML;
         }
 
-        // Creating The Post Model
+        // Creating The Post Model With It's All Features
         document.querySelector(".PostHeader").innerHTML =
           "Hello : " + post.author.name + " 🤝 ";
         document.querySelector(".mainDiv").innerHTML = `
@@ -435,36 +458,49 @@
                           />
                         </svg>
                         <span>  (${post.comments_count}) comments </span>
-                            <span calss="d-block">
-                              ${
-                                post.comments.length > 0
-                                  ? "<p class='mb-0 ms-3 rounded-5' style='cursor:pointer' onclick='ClickingOnComments()'>🔻</p> "
-                                  : "<p class='mb-0 ms-3 rounded-5' style='cursor:pointer'>🔺</p>"
-                              }
+                        <span calss="d-block">
+                          ${
+                            post.comments.length > 0
+                              ? "<p class='mb-0 ms-3 rounded-5' style='cursor:pointer' onclick='ClickingOnComments()'>🔻</p> "
+                              : ""
+                          }
                         </span>
                       </p>
                       <div class="tags ms-3">
-                      ${
-                        post.tags.length > 0
-                          ? post.tagsforEach((el) => {
-                              `<span>${el.name}</span>`;
-                            })
-                          : `<span class="bg-secondary p-2 opacity-75 text-white rounded-5 ms-5">
-                            No Tags 😢
-                            </span>`
-                      }
-                      </div>
+                        ${
+                          post.tags.length > 0
+                            ? post.tagsforEach((el) => {
+                                `<span>${el.name}</span>`;
+                              })
+                            : `<span class="bg-secondary p-2 opacity-75 text-white rounded-5 ms-5">
+                              No Tags 😢
+                              </span>`
+                        }
+                    </div>
               </div>
               <div style='opacity:0' class="mt-4 commentsContainer d-none">
                 ${ShowingTheComments()}
               </div>
-              <div class="addNewComment mt-4">
-                <input type="text" class='p-1 form-control commentInput' placeholder="Write Your Comment" />
-                <button type="submit" class="AddPostBtn btn btn-primary my-1" onclick="AddingNewComment()"> Add </button>
+              <div class="addNewComment mt-4" id="NewCommentInput">
+                <p class="text-danger fw-bold addError"> </p>
+                <input
+                  type="text"
+                  class="p-1 form-control commentInput  d-inline-block"
+                  placeholder="Write Your Comment"
+                  style="width:90%"
+                />
+                <button
+                  type="submit"
+                  class="AddPostBtn btn btn-outline-primary ms-2"
+                  onclick="AddingNewComment()"
+                  style="margin-top: -7px"
+                >
+                  Add
+                </button>
               </div>
           </div>
       </div>
-                          `;
+      `;
       })
       .catch((err) => {
         document.querySelector(
