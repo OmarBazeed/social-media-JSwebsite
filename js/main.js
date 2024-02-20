@@ -159,8 +159,8 @@ function CreatingPosts() {
               ? post.tagsforEach((el) => {
                   `<span>${el.name}</span>`;
                 })
-              : `<span class="bg-secondary p-2 opacity-75 text-white rounded-5">
-              No Tags 😢
+              : `<span class="bg-secondary p-2 opacity-75 text-black rounded-5 px-4">
+              No Tags
               </span>`
           }
           </div>
