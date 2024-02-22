@@ -321,11 +321,101 @@
     let postId = queryParams.get("postid");
 
     //CLICKING ON EDIT COMMENT
-    function EditBtnClicked(id) {
-      console.log(id);
+    function EditBtnClicked(CommentContainer, commentObject) {
+      let Zcomment = JSON.parse(decodeURIComponent(commentObject));
+      CommentContainer.innerHTML = `
+      <div class='w-100'>
+        <p class="text-danger fw-bold editedCommentErr"> </p>
+
+        <section class='d-flex align-items-center ms-2 justify-content-between'>
+          <div class='w-75'>
+            <div>
+              <img src=${
+                Zcomment.author.profile_image != {}
+                  ? Zcomment.author?.profile_image
+                  : "imgs/man_4140037.png"
+              }
+                alt="..."
+                class="rounded-5"
+                style="width:20px;height:20px"/>
+                <span class="text-black fw-bold ms-2">${
+                  Zcomment.author.email != null
+                    ? Zcomment.author.email
+                    : "no email founded"
+                } </span>
+            </div>
+            <input type="text" placeholder="Enter Your New Comment" class="editComment mt-2 p-2 form-control"  />
+          </div>
+          <div>
+            <button class="btn btn-outline-info me-2" onclick="SendingEditedComment(${
+              Zcomment.id
+            })"> Send </button>
+          </div>
+        </section>
+
+      </div>
+      `;
     }
-    function SendingEditComment() {
-      console.log("clicked");
+
+    //CLICKING ON SEND BUTTON FOR UPDATING , EDITING THE COMMENT
+    function SendingEditedComment(commentId) {
+      //Removing The Edited Comment
+      axios
+        .delete(`${BaseURL}/posts/${postId}/comments/${commentId}`)
+        .then((res) => {
+          // document.querySelector(".ToastStrong").innerHTML =
+          //   "Adding New Comments";
+          // document.querySelector(".toast-body").innerHTML =
+          //   "You Have Added A new Comment 👌 ";
+          // document.querySelector(".toast").classList.toggle("show");
+
+          // setTimeout(() => {
+          //   document.querySelector(".toast").classList.remove("show");
+          // }, 1000);
+          console.log(res);
+          // FetchingPostDetails();
+        })
+        .catch((err) => {
+          document.querySelector(".editedCommentErr").innerHTML =
+            err.response.data.message + "😲";
+        });
+
+      // Refetching The Comments Again
+      let newComment = document.querySelector(".editComment").value;
+      let token = JSON.parse(localStorage.getItem("user"))?.token;
+      token
+        ? axios
+            .post(
+              `${BaseURL}/posts/${postId}/comments`,
+              {
+                body: newComment,
+              },
+              {
+                headers: {
+                  authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then((res) => {
+              document.querySelector(".ToastStrong").innerHTML =
+                "Adding New Comments";
+              document.querySelector(".toast-body").innerHTML =
+                "You Have Added A new Comment 👌 ";
+              document.querySelector(".toast").classList.toggle("show");
+
+              setTimeout(() => {
+                document.querySelector(".toast").classList.remove("show");
+              }, 1000);
+              FetchingPostDetails();
+            })
+            .catch((err) => {
+              document.querySelector(".editedCommentErr").innerHTML =
+                err.response.data.message + "😲";
+            })
+        : document.querySelector(".alert").classList.remove("d-none");
+      setTimeout(() => {
+        document.querySelector(".alert").classList.add("d-none");
+      }, 1000);
     }
 
     //SHOWING COMMENTS
@@ -401,8 +491,9 @@
               </div>
           </div>
           <div>
-            <button class="btn btn-outline-warning" onclick='EditBtnClicked(this)'> Edit </button>
-            <button class="btn btn-outline-info" onclick="SendingEditComment()"> Send </button>
+            <button class="btn btn-outline-warning me-2" onclick='EditBtnClicked((this.parentElement).parentElement , "${encodeURIComponent(
+              JSON.stringify(element)
+            )}")'> Edit </button>
           </div>
           </section>`;
       }
@@ -419,6 +510,7 @@
           function ShowingTheComments() {
             let commentsContent = document.createElement("div");
 
+            //SHOWING THE POST COMMEMNTS
             post.comments?.length > 0 &&
               post.comments.forEach((ele) => {
                 let oneComment = document.createElement("div");
