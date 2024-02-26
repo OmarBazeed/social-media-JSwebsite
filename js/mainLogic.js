@@ -1,4 +1,5 @@
 let BaseURL = "https://tarmeezacademy.com/api/v1";
+let AllPosts = [];
 // LOGIN FUNCTION
 let LoginBtn = document.getElementById("loginbtn");
 let userName = document.getElementById("username");
@@ -14,6 +15,46 @@ let AddPostBtn = document.getElementById("AddPostBtn");
 let RegisterBtn = document.querySelector(".RegisterBtn");
 let RegisterModal = document.getElementById("registerModel");
 let CloseRegisterBtn = document.querySelector(".closeRegister");
+
+// CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
+let PostsContainer = document.querySelector(".posts .container");
+
+// FETCHING POSTS...
+//async
+let currentPage = 1;
+lastPage = 1;
+function FetchingPosts() {
+  //todo: FETCHING POSTS WITH ==> fetch() FUNCTION ... ASYNC & AWAIT
+  // let res = await fetch("https://tarmeezacademy.com/api/v1/posts").then((res) =>
+  //   res.json()
+  // );
+  // AllPosts = res.data;
+  // CreatingPosts();
+
+  //todo: FETCHING POSTS ==> WITH new Promise() , new XMLHttpRequest()(open() ;send()) FUNCTIONS ...
+  let FetchingPots = new Promise((resolve, reject) => {
+    let Request = new XMLHttpRequest();
+
+    Request.open("get", `${BaseURL}/posts?limit=15&page=${currentPage}`);
+    Request.responseType = "json";
+
+    Request.onload = () => {
+      if (Request.status >= 200 && Request.status < 300) {
+        resolve(Request.response);
+      } else {
+        reject("There Some error In Your Request");
+      }
+    };
+    Request.send();
+  });
+  FetchingPots.then((res) => {
+    lastPage = res.meta.last_page;
+
+    AllPosts = res.data;
+    CreatingPosts();
+  });
+  FetchingPots.catch((err) => console.log(err));
+}
 
 //FUNCTION FOR STYLING THE LOGGED USER ...
 function StylingTheLoggedUser(res) {
@@ -49,6 +90,16 @@ function StylingTheLoggedUser(res) {
     document.querySelector(".DropMenu").classList.toggle("d-block");
   });
 }
+
+//Showing The Edit Post Button
+function ShowingeditButton(post) {
+  if (post.author.id === JSON.parse(localStorage.getItem("user"))?.user.id) {
+    return "d-block";
+  } else {
+    return "d-none";
+  }
+}
+
 //Check If There Is Token Before(Is The Client Signed In Before) ?
 function CheckingIfUserIsFounded() {
   if (localStorage.getItem("user")) {
@@ -56,6 +107,11 @@ function CheckingIfUserIsFounded() {
     LoginBtns.style.display = "none";
     loggedInUser.classList.remove("d-none");
     AddPostBtn?.classList.remove("d-none");
+
+    // if (JSON.parse(localStorage.getItem("user"))?.user.id) {
+    //   document.getElementById("EditBtn").classList.add("d-block");
+    // }
+    FetchingPosts();
 
     StylingTheLoggedUser();
   } else {
@@ -112,7 +168,6 @@ function loginBtnClicked() {
         }
       })
       .catch((err) => {
-        console.log(err);
         ErrorMessage.classList.remove("d-none");
         ErrorMessage.innerHTML = " ";
         ErrorMessage.innerHTML += err.response?.data?.message + "! 😢";

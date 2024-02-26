@@ -38,46 +38,8 @@ window.onscroll = () => {
   }
 };
 
-// CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
-let PostsContainer = document.querySelector(".posts .container");
-let AllPosts = [];
-
 // FETCHING POSTS...
 //async
-let currentPage = 1;
-lastPage = 1;
-function FetchingPosts() {
-  //todo: FETCHING POSTS WITH ==> fetch() FUNCTION ... ASYNC & AWAIT
-  // let res = await fetch("https://tarmeezacademy.com/api/v1/posts").then((res) =>
-  //   res.json()
-  // );
-  // AllPosts = res.data;
-  // CreatingPosts();
-
-  //todo: FETCHING POSTS ==> WITH new Promise() , new XMLHttpRequest()(open() ;send()) FUNCTIONS ...
-  let FetchingPots = new Promise((resolve, reject) => {
-    let Request = new XMLHttpRequest();
-
-    Request.open("get", `${BaseURL}/posts?limit=15&page=${currentPage}`);
-    Request.responseType = "json";
-
-    Request.onload = () => {
-      if (Request.status >= 200 && Request.status < 300) {
-        resolve(Request.response);
-      } else {
-        reject("There Some error In Your Request");
-      }
-    };
-    Request.send();
-  });
-  FetchingPots.then((res) => {
-    lastPage = res.meta.last_page;
-
-    AllPosts = res.data;
-    CreatingPosts();
-  });
-  FetchingPots.catch((err) => console.log(err));
-}
 FetchingPosts();
 
 /*----------------------------------------------------------------------------------------------------------------------------------
@@ -103,7 +65,7 @@ function CreatingPosts() {
   <div class="card bg-dark text-white mt-5" key=${
     post.id
   } style="cursor:pointer" >
-    <a class="text-decoration-none SinglePost" onclick="ClickingOnSinglePost(${
+    <a class="text-decoration-none SinglePost"        onclick="ClickingOnSinglePost(${
       post.id
     })">
         <h6 class="card-header">
@@ -118,6 +80,9 @@ function CreatingPosts() {
             class="rounded-5"
           />
           <p class="d-inline ms-1">${post.author.username}</p>
+          <p class='btn btn-outline-info ${ShowingeditButton(
+            post
+          )}' onclick="" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
         </h6>
         <div class="card-body">
           <h5 class="card-title">${
@@ -170,6 +135,11 @@ function CreatingPosts() {
   </div>
         `;
   });
+}
+
+//Clicking On Edit Post Button
+function onEditPostButtonClicked(postId) {
+  axios.post(`${BaseURL}/posts/${postId}`, {});
 }
 
 // FUNCTION FOR CLICKING ON EVERY SINGLE POST

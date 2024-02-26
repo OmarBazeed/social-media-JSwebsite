@@ -310,7 +310,7 @@
   <script src="js/bootstrap.min.js"></script>
   <!-- axios js file  -->
   <script src="node_modules/axios/dist/axios.min.js"></script>
-  <!-- main/global login js -->
+  <!-- global/mainLogic js -->
   <script src="js/mainLogic.js"></script>
   <script>
     // getting any query params from ? to end of url
@@ -321,7 +321,7 @@
     let postId = queryParams.get("postid");
 
     //CLICKING ON EDIT COMMENT
-    function EditBtnClicked(CommentContainer, commentObject) {
+    function EditCommentBtnClicked(CommentContainer, commentObject) {
       let Zcomment = JSON.parse(decodeURIComponent(commentObject));
       CommentContainer.innerHTML = `
       <div class='w-100'>
@@ -361,19 +361,9 @@
     function SendingEditedComment(commentId) {
       //Removing The Edited Comment
       axios
-        .delete(`${BaseURL}/posts/${postId}/comments/${commentId}`)
+        .get(`${BaseURL}/posts/${postId}/comments/${commentId}`)
         .then((res) => {
-          // document.querySelector(".ToastStrong").innerHTML =
-          //   "Adding New Comments";
-          // document.querySelector(".toast-body").innerHTML =
-          //   "You Have Added A new Comment 👌 ";
-          // document.querySelector(".toast").classList.toggle("show");
-
-          // setTimeout(() => {
-          //   document.querySelector(".toast").classList.remove("show");
-          // }, 1000);
           console.log(res);
-          // FetchingPostDetails();
         })
         .catch((err) => {
           document.querySelector(".editedCommentErr").innerHTML =
@@ -491,7 +481,7 @@
               </div>
           </div>
           <div>
-            <button class="btn btn-outline-warning me-2" onclick='EditBtnClicked((this.parentElement).parentElement , "${encodeURIComponent(
+            <button class="btn btn-outline-warning me-2" onclick='EditCommentBtnClicked((this.parentElement).parentElement , "${encodeURIComponent(
               JSON.stringify(element)
             )}")'> Edit </button>
           </div>
@@ -552,6 +542,7 @@
             "Hello : " + post.author.name + " 🤝 ";
           document.querySelector(".mainDiv").innerHTML = `
       <div class="card bg-dark text-white mt-5" key=${post.id}>
+        <div class="d-flex align-items-center justify-content-between">
           <h6 class="card-header">
                       <img
                         src=${
@@ -565,6 +556,12 @@
                       />
                       <p class="d-inline ms-1">${post.author.username}</p>
                     </h6>
+                    <p class='m-0 me-2 btn btn-outline-info ${ShowingeditButton(
+                      post
+                    )}' onclick="onEditPostButtonClicked(${
+            post.id
+          })" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
+          </div>
                     <div class="card-body">
                       <h5 class="card-title">${
                         post.title != null
@@ -579,7 +576,7 @@
                         }
                         class="w-100 img-responsive img-thumbnail"
                         alt="img"
-                        style="max-height: 75vh"
+                        style=""
                       />
                       <p class="text-secondary"> ${post.created_at} </p>
                       <p class="card-text"> ${

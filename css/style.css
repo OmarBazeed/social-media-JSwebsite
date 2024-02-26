@@ -108,9 +108,8 @@ header {
   transform: scale(1);
 }
 .card:hover {
-  box-shadow: 0 0 0 10px rgba(26, 26, 26, 0.253),
-    0 0 0 20px rgba(21, 21, 21, 0.379);
-  transform: scale(1.01);
+  box-shadow: 0 0 0 10px rgba(26, 26, 26, 0.253);
+  transform: scale(1.005);
 }
 
 @media screen and (max-width: 460px) {
