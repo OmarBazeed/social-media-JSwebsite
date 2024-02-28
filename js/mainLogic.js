@@ -17,7 +17,7 @@ let RegisterModal = document.getElementById("registerModel");
 let CloseRegisterBtn = document.querySelector(".closeRegister");
 
 // CREATING POSTS WITH API AND PUSHING THEM TO POSTS CONTAINER
-let PostsContainer = document.querySelector(".posts .container");
+let PostsContainer = document.querySelector(".posts #PostsContainer");
 
 // FETCHING POSTS...
 //async
@@ -51,7 +51,7 @@ function FetchingPosts() {
     lastPage = res.meta.last_page;
 
     AllPosts = res.data;
-    CreatingPosts();
+    location.href === "http://127.0.0.1:5501/index.html" && CreatingPosts();
   });
   FetchingPots.catch((err) => console.log(err));
 }
@@ -108,9 +108,6 @@ function CheckingIfUserIsFounded() {
     loggedInUser.classList.remove("d-none");
     AddPostBtn?.classList.remove("d-none");
 
-    // if (JSON.parse(localStorage.getItem("user"))?.user.id) {
-    //   document.getElementById("EditBtn").classList.add("d-block");
-    // }
     FetchingPosts();
 
     StylingTheLoggedUser();
@@ -252,3 +249,62 @@ RegisterBtnForSubmit.addEventListener("click", () => {
       });
     });
 });
+
+// EDIT POST BUTTON CLICKED
+function EditPostBtnClicked() {
+  // location.href = "http://127.0.0.1:5501/index.html" && e.stopPagination();
+  let EditPostModule = document.getElementById("createPostModel");
+  EditPostModule.classList.add("show");
+  EditPostModule.style.display = "block";
+  document.querySelector(".closeBost").onclick = () => {
+    EditPostModule.classList.remove("show");
+    EditPostModule.style.display = "none";
+  };
+  let PostHeader = document.getElementById("titleContent");
+  PostHeader.value = JSON.parse(localStorage.getItem("SinglePost")).title;
+  let PostBody = document.getElementById("bodyContent");
+  PostBody.value = JSON.parse(localStorage.getItem("SinglePost")).body;
+  let EditPostBtnInsideModule = document.getElementById("addPostbtn");
+  let PicContent = document.getElementById("NewPicContent");
+
+  //todo : Here Is For Clicking On Edut Post Button To Submit The New Changes
+  EditPostBtnInsideModule.onclick = () => {
+    let formData = new FormData();
+    formData.append("title", PostHeader.value);
+    formData.append("body", PostBody.value);
+    formData.append("image", PicContent.files[0]);
+    formData.append("_method", "put");
+    postId = JSON.parse(localStorage.getItem("SinglePost")).id;
+
+    axios
+      .post(`${BaseURL}/posts/${postId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: `Bearer ${
+            JSON.parse(localStorage.getItem("user")).token
+          }`,
+        },
+      })
+      .then((res) => {
+        EditPostModule.classList.remove("d-block");
+        document.getElementById("createPostModelDialog").style.display = "none";
+        ToastDivStrong.innerHTML = "EDIT POST STATUS";
+        ToastDivBody.innerHTML = "You Edited Your Post Successfuly 👺 ";
+        ToastDiv.classList.toggle("show");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      })
+      .catch((err) => {
+        document.querySelector(".createPostModel-message").innerHTML = "";
+        document.querySelector(".createPostModel-message").innerHTML =
+          err.response.data.message + "😢";
+        document.querySelectorAll(".addPostInputs input").forEach((ele) => {
+          ele.style.animation = "none";
+          setTimeout(() => {
+            ele.style.animation = "buzzle 0.5s 1 ease-in-out alternate";
+          }, 100);
+        });
+      });
+  };
+}

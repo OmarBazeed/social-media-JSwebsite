@@ -42,22 +42,6 @@ window.onscroll = () => {
 //async
 FetchingPosts();
 
-/*----------------------------------------------------------------------------------------------------------------------------------
-|--// ONE OF THE MOST IMPORTANT FUNCTIONS IN JAVASCRIPT IS HANDLING WITH PAGINATION
-|--//todo: Concept Of Pagination ( Infinite Scrolling ) Is ==> When You Reach The End Of Page It Requests The Upcomming Posts Not TO Overload On Server And Brwoser So When Call Function Which FetchProducts() With New Ones When Window Reach The End Of Scroll
-------------------------------------------------------------------------------------------------------------------------------------*/
-window.addEventListener("scroll", () => {
-  // This Variable For Cakculating The End Of Page Scroll
-  let endOfPage =
-    window.scrollY + window.innerHeight + 1 >=
-    document.documentElement.scrollHeight;
-  // When We Reach It We Have To Change The Page Where We FetchProducts To The Next One Then Fetch The New Products
-  if (endOfPage && currentPage < lastPage) {
-    currentPage += 1;
-    FetchingPosts();
-  }
-});
-
 // PUSHING POSTS TO HTML FILE
 function CreatingPosts() {
   AllPosts.forEach((post) => {
@@ -80,9 +64,9 @@ function CreatingPosts() {
             class="rounded-5"
           />
           <p class="d-inline ms-1">${post.author.username}</p>
-          <p class='btn btn-outline-info ${ShowingeditButton(
+          <p class='btn homePageEdit btn-outline-info ${ShowingeditButton(
             post
-          )}' onclick="" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
+          )}' onclick="EditPostBtnClicked()" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
         </h6>
         <div class="card-body">
           <h5 class="card-title">${
@@ -137,10 +121,21 @@ function CreatingPosts() {
   });
 }
 
-//Clicking On Edit Post Button
-function onEditPostButtonClicked(postId) {
-  axios.post(`${BaseURL}/posts/${postId}`, {});
-}
+/*----------------------------------------------------------------------------------------------------------------------------------
+|--// ONE OF THE MOST IMPORTANT FUNCTIONS IN JAVASCRIPT IS HANDLING WITH PAGINATION
+|--//todo: Concept Of Pagination ( Infinite Scrolling ) Is ==> When You Reach The End Of Page It Requests The Upcomming Posts Not TO Overload On Server And Brwoser So When Call Function Which FetchProducts() With New Ones When Window Reach The End Of Scroll
+------------------------------------------------------------------------------------------------------------------------------------*/
+window.addEventListener("scroll", () => {
+  // This Variable For Cakculating The End Of Page Scroll
+  let endOfPage =
+    window.scrollY + window.innerHeight + 1 >=
+    document.documentElement.scrollHeight;
+  // When We Reach It We Have To Change The Page Where We FetchProducts To The Next One Then Fetch The New Products
+  if (endOfPage && currentPage < lastPage) {
+    currentPage += 1;
+    FetchingPosts();
+  }
+});
 
 // FUNCTION FOR CLICKING ON EVERY SINGLE POST
 function ClickingOnSinglePost(postId) {
@@ -181,7 +176,6 @@ CreateNewPost.addEventListener("click", () => {
       },
     })
     .then((res) => {
-      console.log(PicContent);
       AddPostModal.classList.remove("d-block");
       document.getElementById("createPostModelDialog").style.display = "none";
 

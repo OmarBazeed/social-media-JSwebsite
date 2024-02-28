@@ -305,6 +305,82 @@
     >
       You have To Sign in To Add New Comment!
     </div>
+    <!-- CREATE POST MODAL -->
+    <div
+      class="modal fade"
+      id="createPostModel"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" id="createPostModelDialog">
+        <div class="modal-content bg-black border-1 border-secondary">
+          <div class="modal-header">
+            <h3 class="modal-title fs-5 text-light" id="exampleModalLabel">
+              Edit Your Post
+            </h3>
+            <p
+              class="createPostModel-message mb-0 ms-3 fw-bold text-decoration-capitalize text-danger fst-italic"
+              id="RegisterError"
+            ></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-1 addPostInputs">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >Title</label
+                >
+                <input type="text" class="form-control" id="titleContent" />
+              </div>
+              <div class="mb-1 addPostInputs">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >body</label
+                >
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="bodyContent"
+                ></textarea>
+              </div>
+              <div class="mb-1 addPostInputs">
+                <label
+                  for="NewUsername"
+                  class="col-form-label text-capitalize fw-bold text-secondary"
+                  style="letter-spacing: 2px"
+                  >Picture</label
+                >
+                <input type="file" class="form-control" id="NewPicContent" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="addPostbtn">
+              Add
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger closeBost"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ENDING CREATE POST MODAL -->
   </body>
   <!-- bootstrap js file -->
   <script src="js/bootstrap.min.js"></script>
@@ -495,6 +571,7 @@
         .get(`${BaseURL}/posts/${postId}`)
         .then((res) => {
           let post = res.data.data;
+          localStorage.setItem("SinglePost", JSON.stringify(post));
 
           // Showing The Comments In The Comments Container
           function ShowingTheComments() {
@@ -558,9 +635,7 @@
                     </h6>
                     <p class='m-0 me-2 btn btn-outline-info ${ShowingeditButton(
                       post
-                    )}' onclick="onEditPostButtonClicked(${
-            post.id
-          })" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
+                    )}' onclick="EditPostBtnClicked()" style='cursor:pointer; float:right' id='EditBtn'> Edit  </p>
           </div>
                     <div class="card-body">
                       <h5 class="card-title">${
